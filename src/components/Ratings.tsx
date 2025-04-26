@@ -7,7 +7,7 @@ interface Props {
 
 const Ratings: FC<Props> = ({ rating }) => {
     return (
-        <div className="flex justify-center items-center">
+        <div className='flex justify-center items-center'>
           {[1, 2, 3, 4, 5].map((star) => (
             <Star
               key={star}
