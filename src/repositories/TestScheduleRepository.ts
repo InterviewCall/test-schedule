@@ -80,7 +80,6 @@ class TestScheduleRepository {
         const candidate = await this.scheduleModel.findOneAndUpdate({ candidateEmail: email }, {
             reportCard,
             percentage,
-            testStatus: TEST_STATUS.SUBMITTED
         }, { new: true }).lean();
 
         if(!candidate) {
