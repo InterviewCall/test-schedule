@@ -1,0 +1,80 @@
+import { Document, Model, model, models, Schema } from 'mongoose';
+
+import { TEST_STATUS } from '@/enums/TestStatus';
+
+export interface ISchedule extends Document {
+    candidateName: string
+    candidateEmail: string
+    dateOfTest: Date
+    startTime: Date
+    endTime: Date
+    invitedBy: string
+    testStatus: TEST_STATUS
+    reportCard: string,
+    percentage: number
+    ratings: number
+}
+
+const scheduleSchema = new Schema<ISchedule>({
+    candidateName: {
+        type: String,
+        required: true
+    },
+
+    candidateEmail: { 
+        type: String, 
+        required: true,
+        unique: true
+    },
+
+    dateOfTest: {
+        type: Date,
+        required: true,
+        index: true
+    },
+
+    startTime: {
+        type: Date,
+        required: true
+    },
+
+    endTime: {
+        type: Date,
+        required: true,
+        index: true
+    },
+
+    invitedBy: {
+        type: String,
+        required: true
+    },
+
+    testStatus: {
+        type: String,
+        enum: Object.values(TEST_STATUS),
+        default: TEST_STATUS.INVITED,
+        required: true,
+        index: true
+    },
+
+    reportCard: {
+        type: String,
+        default: null
+    },
+
+    percentage: {
+        type: Number,
+        default: null
+    },
+
+    ratings: {
+        type: Number,
+        default: null
+    }
+}, { timestamps: true });
+
+scheduleSchema.index({ dateOfTest: 1, endTime: 1, testStatus: 1 });
+
+const ScheduleModel: Model<ISchedule> = models.ScheduleModel || model<ISchedule>('ScheduleModel', scheduleSchema);
+
+export default ScheduleModel;
