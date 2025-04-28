@@ -187,15 +187,16 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!userDetails) router.replace('/login');
+    if (!userDetails) {
+      router.replace('/login');
+      return;
+    }
+    fetchTests();
   }, [router, userDetails]);
-
-  useEffect(() => {
-    if (userDetails) fetchTests();
-  }, [userDetails]);
 
   const fetchTests = async () => {
     try {
+      setLoading(true);
       const response: AxiosResponse<TestResponse> =
         await axios.get('/api/get-tests');
       setTest(response.data.data);
@@ -203,6 +204,8 @@ export default function Home() {
       const err = error as AxiosError<ErrorResponse>;
       const message = err.response?.data.message || 'Something went wrong';
       toast.error(message);
+    } finally {
+      setLoading(false);
     }
   };
 
