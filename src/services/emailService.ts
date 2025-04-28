@@ -9,8 +9,8 @@ export async function sendEmail(date: string, timeSlot: string, maxStartTime: st
             from: 'InterviewCall <entrance-test@interviewcall.club>',
             to: mailTo,
             subject: 'InterviewCall Entrance Test Invitation',
-            html: TestEmail({ date, timeSlot, maxStartTime, testLink: 'https://www.interviewcall.club'}),
-            text: TestEmailPlainText({ date, timeSlot, maxStartTime, testLink: 'https://www.interviewcall.club'})
+            html: TestEmail({ date, timeSlot, maxStartTime, testLink: process.env.TEST_PORTAL_LINK!}),
+            text: TestEmailPlainText({ date, timeSlot, maxStartTime, testLink: process.env.TEST_PORTAL_LINK!})
         });
         return {
             success: true,
