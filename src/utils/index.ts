@@ -7,19 +7,19 @@ export const formatDate = (date: Date) => {
     month: 'long',
     year: 'numeric',
     timeZone: 'Asia/Kolkata',
-  }).format(new Date(date)); 
+  }).format(new Date(date));
 };
 
 export const formatTime = (time: Date) => {
-    return Intl.DateTimeFormat('en-GB', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-      timeZone: 'Asia/Kolkata'
-    }).format(new Date(time));
+  return Intl.DateTimeFormat('en-GB', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: 'Asia/Kolkata',
+  }).format(new Date(time));
 };
 
 export const getMaxStartTime = (time: Date) => {
-  const zonedTime = toZonedTime(time, 'Asia/Kolkata');
-    return subMinutes(zonedTime, 22);
+  const zonedTime = toZonedTime(new Date(time), 'Asia/Kolkata');
+  return subMinutes(zonedTime, 22);
 };
