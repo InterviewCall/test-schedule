@@ -21,5 +21,13 @@ export const formatTime = (time: Date) => {
 
 export const getMaxStartTime = (time: Date) => {
   const zonedTime = toZonedTime(new Date(time), 'Asia/Kolkata');
-  return subMinutes(zonedTime, 22);
+  const adjustedTime = subMinutes(zonedTime, 22);
+  const maxStartTime = toZonedTime(adjustedTime, 'Asia/Kolkata');
+
+  return Intl.DateTimeFormat('en-GB', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: 'Asia/Kolkata',
+  }).format(maxStartTime);
 };

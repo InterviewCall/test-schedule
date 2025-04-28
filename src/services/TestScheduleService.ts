@@ -19,7 +19,7 @@ class TestScheduleService {
             const timeSlot = `${formatTime(data.startTime)} - ${formatTime(data.endTime)}`;
             const maxStartTime = getMaxStartTime(data.endTime);
 
-            await sendEmail(date, timeSlot, formatTime(maxStartTime), data.candidateEmail);
+            await sendEmail(date, timeSlot, maxStartTime, data.candidateEmail);
             return test;
         } catch (error) {
             console.log(error);
@@ -76,7 +76,7 @@ class TestScheduleService {
             const timeSlot = `${formatTime(startTime)} - ${formatTime(endTime)}`;
             const maxStartTime = getMaxStartTime(endTime);
 
-            await sendEmail(testDate, timeSlot, formatTime(maxStartTime), email);
+            await sendEmail(testDate, timeSlot, maxStartTime, email);
         } catch (error) {
             throw error;
         }
