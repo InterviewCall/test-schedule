@@ -168,6 +168,7 @@ const Select = dynamic(() => import('react-select'), { ssr: false });
 export default function Home() {
   const { userDetails } = useContext(UserContext);
   const [test, setTest] = useState<Test[]>([]);
+  const [showCandidates, setShowCandidates] = useState(false);
   const [loading, setLoading] = useState(false);
   const [dateOfTest, setDateOfTest] = useState<Date | null>(null);
   const [updateDateOfTest, setUpdateDateOfTest] = useState<Date | null>(null);
@@ -192,13 +193,21 @@ export default function Home() {
     if (!userDetails) {
       router.replace('/login');
     } else {
-      fetchTests();
+      const showCandidate = sessionStorage.getItem('showCandidate');
+      if(showCandidate) {
+        setShowCandidates(true);
+        fetchTests();
+      }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userDetails]);
 
   const fetchTests = async () => {
     try {
+      if(!showCandidates) {
+        setShowCandidates(true);
+        sessionStorage.setItem('showCandidate', JSON.stringify(true));
+      }
       setLoading(true);
       const response: AxiosResponse<TestResponse> =
         await axios.get('/api/get-tests');
@@ -620,8 +629,14 @@ export default function Home() {
               ))}
             </div>
 
+            {!showCandidates && (
+              <div className='h-[200px] flex justify-center items-center'>
+                <button className='btn btn-accent text-white' onClick={fetchTests}>Show Candidates</button>
+              </div>
+            )}
+
             {/* Candidates List */}
-            {test.length > 0 &&
+            {test.length > 0 && showCandidates == true &&
               test.map((candidate, index) => (
                 <div
                   key={index}
