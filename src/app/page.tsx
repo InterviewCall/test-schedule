@@ -187,12 +187,15 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
+    if (userDetails === undefined) return;
+  
     if (!userDetails) {
       router.replace('/login');
-      return;
+    } else {
+      fetchTests();
     }
-    fetchTests();
-  }, [router, userDetails]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userDetails]);
 
   const fetchTests = async () => {
     try {
