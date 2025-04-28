@@ -1,11 +1,11 @@
 import { format, subMinutes } from 'date-fns';
 
 export const formatDate = (date: Date) => {
-  return format(date, 'dd MMMM, yyyy'); 
+  return format(new Date(date), 'dd MMMM, yyyy'); 
 };
 
 export const formatTime = (time: Date) => {
-    return format(time, 'h:mm aa');
+    return format(new Date(time), 'h:mm aa');
 };
 
 export const getMaxStartTime = (time: Date) => {
