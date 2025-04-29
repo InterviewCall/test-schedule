@@ -459,6 +459,7 @@ export default function Home() {
                   required
                 />
               </div>
+
               {/* <div className="space-y-2">
                 <label
                   htmlFor="email"
@@ -489,12 +490,12 @@ export default function Home() {
                 />
               </div> */}
               <div className="space-y-2">
-                {/* <label
+                <label
                   htmlFor="address"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Select Time Slot
-                </label> */}
+                </label>
                   {/* <DatePicker
                     selected={startTime}
                     onChange={(time) => {
@@ -565,6 +566,12 @@ export default function Home() {
                 /> */}
 
               <div className="space-y-2">
+              <label
+                  htmlFor="address"
+                  className="text-sm block font-medium text-gray-700 md:opacity-0 max-md:hidden"
+                >
+                  Select Time Slot
+                </label>
                 <DatePicker
                   selected={endTime}
                   onChange={(date) => setEndTime(date)}
