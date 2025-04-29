@@ -21,8 +21,29 @@ class TestScheduleRepository {
         return test;
     }
 
+    async getAllTestCandidate(): Promise<ISchedule[]> {
+        const test = await this.scheduleModel.find({}, {
+            candidateEmail: 1,
+            candidateName: 1,
+            invitedBy: 1,
+            startTime: 1,
+            endTime: 1,
+            testStatus: 1,
+            ratings: 1
+        }).lean();
+        return test;
+    }
+
     async getTest(email: string) {
-        const test = await this.scheduleModel.findOne({ candidateEmail: email }).lean();
+        const test = await this.scheduleModel.findOne({ candidateEmail: email }, {
+            candidateEmail: 1,
+            candidateName: 1,
+            invitedBy: 1,
+            startTime: 1,
+            endTime: 1,
+            testStatus: 1,
+            ratings: 1
+        }).lean();
         if(!test) {
             throw { message: 'No Credenials Found' };
         }

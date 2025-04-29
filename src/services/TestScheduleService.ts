@@ -36,6 +36,15 @@ class TestScheduleService {
         }
     }
 
+    async getAllTestsCandidate() {
+        try {
+            const tests = await this.testScheduleRepository.getAllTestCandidate();
+            return tests;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async getTest(email: string) {
         try {
             const test = await this.testScheduleRepository.getTest(email);
