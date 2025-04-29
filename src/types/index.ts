@@ -27,7 +27,6 @@ export interface TestProps {
 export interface TestRequest {
     candidateName: string
     candidateEmail: string
-    dateOfTest: Date
     startTime: Date
     endTime: Date
     invitedBy: string

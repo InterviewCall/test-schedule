@@ -5,7 +5,6 @@ import { TEST_STATUS } from '@/enums/TestStatus';
 export interface ISchedule extends Document {
     candidateName: string
     candidateEmail: string
-    dateOfTest: Date
     startTime: Date
     endTime: Date
     invitedBy: string
@@ -25,12 +24,6 @@ const scheduleSchema = new Schema<ISchedule>({
         type: String, 
         required: true,
         unique: true
-    },
-
-    dateOfTest: {
-        type: Date,
-        required: true,
-        index: true
     },
 
     startTime: {

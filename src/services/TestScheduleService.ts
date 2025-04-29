@@ -15,7 +15,7 @@ class TestScheduleService {
     async createTest(data: TestRequest) {
         try {
             const test = await this.testScheduleRepository.createTest(data);
-            const date = formatDate(data.dateOfTest);
+            const date = formatDate(data.startTime);
             const timeSlot = `${formatTime(data.startTime)} - ${formatTime(data.endTime)}`;
             const maxStartTime = getMaxStartTime(data.endTime);
 
@@ -72,7 +72,7 @@ class TestScheduleService {
     async updateDateTimeSlot(email: string, startTime: Date, endTime: Date, date?: Date) {
         try {
             const candidate = await this.testScheduleRepository.updateDateTimeSlot(email, startTime, endTime, date);
-            const testDate = date ? formatDate(date) : formatDate(candidate.dateOfTest);
+            const testDate = date ? formatDate(date) : formatDate(candidate.startTime);
             const timeSlot = `${formatTime(startTime)} - ${formatTime(endTime)}`;
             const maxStartTime = getMaxStartTime(endTime);
 

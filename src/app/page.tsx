@@ -170,8 +170,8 @@ export default function Home() {
   const [test, setTest] = useState<Test[]>([]);
   const [showCandidates, setShowCandidates] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [dateOfTest, setDateOfTest] = useState<Date | null>(null);
-  const [updateDateOfTest, setUpdateDateOfTest] = useState<Date | null>(null);
+  // const [dateOfTest, setDateOfTest] = useState<Date | null>(null);
+  // const [updateDateOfTest, setUpdateDateOfTest] = useState<Date | null>(null);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [updateStartTime, setUpdateStartTime] = useState<Date | null>(null);
   const [endTime, setEndTime] = useState<Date | null>(null);
@@ -189,22 +189,27 @@ export default function Home() {
 
   useEffect(() => {
     if (userDetails === undefined) return;
-  
+
     if (!userDetails) {
       router.replace('/login');
     } else {
       const showCandidate = sessionStorage.getItem('showCandidate');
-      if(showCandidate) {
+      if (showCandidate) {
         setShowCandidates(true);
         fetchTests();
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // console.log(test);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userDetails]);
+
+  useEffect(() => {
+    console.log(test);
+  }, [test]);
 
   const fetchTests = async () => {
     try {
-      if(!showCandidates) {
+      if (!showCandidates) {
         setShowCandidates(true);
         sessionStorage.setItem('showCandidate', JSON.stringify(true));
       }
@@ -229,7 +234,6 @@ export default function Home() {
       const response = await axios.post('/api/schedule-test', {
         candidateName: formData.candidateName,
         candidateEmail: formData.candidateEmail,
-        dateOfTest,
         startTime,
         endTime,
         invitedBy: selectAdvisor?.value,
@@ -243,7 +247,6 @@ export default function Home() {
           candidateName: '',
           candidateEmail: '',
         });
-        setDateOfTest(null);
         setStartTime(null);
         setEndTime(null);
         setSelecteAdvisor(null);
@@ -256,7 +259,6 @@ export default function Home() {
         candidateName: '',
         candidateEmail: '',
       });
-      setDateOfTest(null);
       setStartTime(null);
       setEndTime(null);
       setSelecteAdvisor(null);
@@ -272,7 +274,6 @@ export default function Home() {
       setLoading(true);
       await axios.put('/api/update-schedule', {
         updateEmail,
-        updateDateOfTest,
         updateStartTime,
         updateEndTime,
       });
@@ -285,7 +286,6 @@ export default function Home() {
       toast.error(message);
     } finally {
       setUpdateEmail('');
-      setUpdateDateOfTest(null);
       setUpdateStartTime(null);
       setUpdateEndTime(null);
     }
@@ -356,7 +356,7 @@ export default function Home() {
                 required
               />
 
-              <DatePicker
+              {/* <DatePicker
                 selected={updateDateOfTest}
                 onChange={(date) => {
                   setUpdateDateOfTest(date);
@@ -366,43 +366,33 @@ export default function Home() {
                 placeholderText="Select Date"
                 popperPlacement="bottom"
                 className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-              />
+              /> */}
 
-              <DatePicker
-                selected={updateStartTime}
-                onChange={(time) => {
-                  setUpdateStartTime(time);
-                  setUpdateEndTime(null); // Reset end time when start time changes
-                }}
-                showTimeSelect
-                showTimeSelectOnly
-                timeIntervals={30} // Allows only 30-minute intervals
-                timeFormat="h:mm aa"
-                dateFormat="h:mm aa"
-                popperPlacement="bottom"
-                placeholderText="Select Start Time"
-                className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-              />
+                  <DatePicker
+                    selected={updateStartTime}
+                    onChange={(date) => {
+                      setUpdateStartTime(date);
+                      setUpdateEndTime(null); // Reset end time when start changes
+                    }}
+                    showTimeSelect
+                    dateFormat="dd MMM yyyy, h:mm aa"
+                    minDate={new Date()}
+                    placeholderText="Select Start Date & Time"
+                    className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                  />
 
-              <DatePicker
-                selected={updateEndTime}
-                onChange={setUpdateEndTime}
-                showTimeSelect
-                showTimeSelectOnly
-                timeIntervals={30}
-                timeFormat="h:mm aa"
-                dateFormat="h:mm aa"
-                popperPlacement="bottom"
-                placeholderText="Select End Time"
-                minTime={
-                  updateStartTime ? addMinutes(updateStartTime, 30) : undefined
-                } // Ensures 30-min gap
-                maxTime={
-                  updateStartTime ? addMinutes(updateStartTime, 60) : undefined
-                }
-                disabled={!updateStartTime} // Enable only after selecting start time
-                className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-              />
+                <DatePicker
+                  selected={updateEndTime}
+                  onChange={(date) => setUpdateEndTime(date)}
+                  showTimeSelect
+                  dateFormat="dd MMM yyyy, h:mm aa"
+                  minDate={updateStartTime || new Date()}
+                  minTime={updateStartTime ? addMinutes(updateStartTime, 30) : undefined}
+                  maxTime={updateStartTime ? addMinutes(updateStartTime, 120) : undefined}
+                  disabled={!updateStartTime}
+                  placeholderText="Select End Date & Time"
+                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                />
               {/* if there is a button in form, it will close the modal */}
               <button className="btn btn-success" type="submit">
                 Update
@@ -469,7 +459,7 @@ export default function Home() {
                   required
                 />
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <label
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
@@ -487,7 +477,7 @@ export default function Home() {
                   placeholderText="Select Date"
                   className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
                 />
-                {/* <input
+                <input
                   id='email'
                   type='email'
                   name='email'
@@ -496,18 +486,16 @@ export default function Home() {
                   onChange={handleChange}
                   className='w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700'
                   required
-                /> */}
-              </div>
+                />
+              </div> */}
               <div className="space-y-2">
-                <label
+                {/* <label
                   htmlFor="address"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Select Time Slot
-                </label>
-
-                <div className="flex gap-x-3.5">
-                  <DatePicker
+                </label> */}
+                  {/* <DatePicker
                     selected={startTime}
                     onChange={(time) => {
                       setStartTime(time);
@@ -520,9 +508,22 @@ export default function Home() {
                     dateFormat="h:mm aa"
                     placeholderText="Select Start Time"
                     className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                  />
+                  /> */}
 
                   <DatePicker
+                    selected={startTime}
+                    onChange={(date) => {
+                      setStartTime(date);
+                      setEndTime(null); // Reset end time when start changes
+                    }}
+                    showTimeSelect
+                    dateFormat="dd MMM yyyy, h:mm aa"
+                    minDate={new Date()}
+                    placeholderText="Select Start Date & Time"
+                    className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                  />
+
+                  {/* <DatePicker
                     selected={endTime}
                     onChange={(time) => {
                       setEndTime(time);
@@ -537,7 +538,20 @@ export default function Home() {
                     maxTime={startTime ? addMinutes(startTime, 60) : undefined}
                     disabled={!startTime} // Enable only after selecting start time
                     className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                  />
+                  /> */}
+
+                  {/* <DatePicker
+                    selected={endTime}
+                    onChange={(date) => setEndTime(date)}
+                    showTimeSelect
+                    dateFormat="dd MMM yyyy, h:mm aa"
+                    minDate={startTime || new Date()}
+                    minTime={startTime ? addMinutes(startTime, 30) : undefined}
+                    maxTime={startTime ? addMinutes(startTime, 120) : undefined}
+                    disabled={!startTime}
+                    placeholderText="Select End Date & Time"
+                    className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                  /> */}
                 </div>
                 {/* <input
                   id='address'
@@ -549,6 +563,20 @@ export default function Home() {
                   className='w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700'
                   required
                 /> */}
+
+              <div className="space-y-2">
+                <DatePicker
+                  selected={endTime}
+                  onChange={(date) => setEndTime(date)}
+                  showTimeSelect
+                  dateFormat="dd MMM yyyy, h:mm aa"
+                  minDate={startTime || new Date()}
+                  minTime={startTime ? addMinutes(startTime, 30) : undefined}
+                  maxTime={startTime ? addMinutes(startTime, 120) : undefined}
+                  disabled={!startTime}
+                  placeholderText="Select End Date & Time"
+                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                />
               </div>
               <div className="space-y-2 md:col-span-2">
                 <label
@@ -626,29 +654,32 @@ export default function Home() {
                 'Invited By',
                 'Ratings',
               ].map((header) => (
-                <div
-                  key={header}
-                  className="p-2 uppercase border-b font-bold"
-                >
+                <div key={header} className="p-2 uppercase border-b font-bold">
                   {header}
                 </div>
               ))}
             </div>
 
             {!showCandidates && (
-              <div className='h-[200px] flex justify-center items-center'>
-                <button className='btn btn-accent text-white' onClick={fetchTests}>Show Candidates</button>
+              <div className="h-[200px] flex justify-center items-center">
+                <button
+                  className="btn btn-accent text-white"
+                  onClick={fetchTests}
+                >
+                  Show Candidates
+                </button>
               </div>
             )}
 
             {showCandidates && test.length == 0 && (
-              <div className='h-[200px] flex justify-center items-center'>
+              <div className="h-[200px] flex justify-center items-center">
                 No Test Schedules Right Now
               </div>
             )}
 
             {/* Candidates List */}
-            {test.length > 0 && showCandidates == true &&
+            {test.length > 0 &&
+              showCandidates == true &&
               test.map((candidate, index) => (
                 <div
                   key={index}
@@ -668,7 +699,7 @@ export default function Home() {
                     Show Email
                   </div>
                   <div className="hidden lg:block p-2 text-center">
-                    {formatDate(candidate.dateOfTest)}
+                    {formatDate(candidate.startTime)}
                   </div>
                   <div className="hidden lg:block p-2 text-center">{`${formatTime(candidate.startTime)}-${formatTime(candidate.endTime)}`}</div>
                   <div className="hidden lg:block p-2 text-center">
@@ -723,7 +754,7 @@ export default function Home() {
                     </div>
                     <div className="mb-2">
                       <span className="font-semibold">Date Of Test:</span>{' '}
-                      {formatDate(candidate.dateOfTest)}
+                      {formatDate(candidate.startTime)}
                     </div>
                     <div className="mb-2">
                       <span className="font-semibold">Time Slot:</span>{' '}
