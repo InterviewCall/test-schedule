@@ -57,16 +57,12 @@ class TestScheduleRepository {
         await this.scheduleModel.updateOne({ candidateEmail: email }, { $set: { reportCard }});
     }
 
-    async updateDateTimeSlot(email: string, startTime: Date, endTime: Date, date?: Date) {
+    async updateDateTimeSlot(email: string, startTime: Date, endTime: Date) {
         const updateFields: Partial<ISchedule> = {
             startTime,
             endTime,
             testStatus: TEST_STATUS.INVITED
         };
-
-        if(date) {
-            updateFields.dateOfTest = date;
-        }
 
         const candidate = await this.scheduleModel.findOneAndUpdate({ candidateEmail: email }, { $set: updateFields }, { new: true }).lean();
         if(!candidate) {

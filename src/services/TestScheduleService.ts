@@ -71,7 +71,7 @@ class TestScheduleService {
 
     async updateDateTimeSlot(email: string, startTime: Date, endTime: Date, date?: Date) {
         try {
-            const candidate = await this.testScheduleRepository.updateDateTimeSlot(email, startTime, endTime, date);
+            const candidate = await this.testScheduleRepository.updateDateTimeSlot(email, startTime, endTime);
             const testDate = date ? formatDate(date) : formatDate(candidate.startTime);
             const timeSlot = `${formatTime(startTime)} - ${formatTime(endTime)}`;
             const maxStartTime = getMaxStartTime(endTime);
