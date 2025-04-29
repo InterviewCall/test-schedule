@@ -4,7 +4,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import clsx from 'clsx';
 import { addMinutes } from 'date-fns';
-import { toZonedTime } from 'date-fns-tz';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import {
@@ -359,7 +358,9 @@ export default function Home() {
 
               <DatePicker
                 selected={updateDateOfTest}
-                onChange={(date) => setUpdateDateOfTest(date)}
+                onChange={(date) => {
+                  setUpdateDateOfTest(date);
+                }}
                 dateFormat="dd MMMM, yyyy"
                 minDate={new Date()}
                 placeholderText="Select Date"
@@ -479,8 +480,7 @@ export default function Home() {
                 <DatePicker
                   selected={dateOfTest}
                   onChange={(date) => {
-                    const zonedTime = toZonedTime(date!, 'Asia/Kolkata');
-                    setDateOfTest(zonedTime);
+                    setDateOfTest(date);
                   }}
                   dateFormat="dd MMMM, yyyy"
                   minDate={new Date()}
@@ -510,8 +510,7 @@ export default function Home() {
                   <DatePicker
                     selected={startTime}
                     onChange={(time) => {
-                      const zonedTime = toZonedTime(time!, 'Asia/Kolkata');
-                      setStartTime(zonedTime);
+                      setStartTime(time);
                       setEndTime(null); // Reset end time when start time changes
                     }}
                     showTimeSelect
@@ -526,8 +525,7 @@ export default function Home() {
                   <DatePicker
                     selected={endTime}
                     onChange={(time) => {
-                      const zonedTime = toZonedTime(time!, 'Asia/Kolkata');
-                      setEndTime(zonedTime);
+                      setEndTime(time);
                     }}
                     showTimeSelect
                     showTimeSelectOnly
