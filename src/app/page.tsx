@@ -641,6 +641,12 @@ export default function Home() {
               </div>
             )}
 
+            {showCandidates && test.length == 0 && (
+              <div className='h-[200px] flex justify-center items-center'>
+                No Test Schedules Right Now
+              </div>
+            )}
+
             {/* Candidates List */}
             {test.length > 0 && showCandidates == true &&
               test.map((candidate, index) => (
