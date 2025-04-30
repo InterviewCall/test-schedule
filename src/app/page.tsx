@@ -383,7 +383,13 @@ export default function Home() {
 
                 <DatePicker
                   selected={updateEndTime}
-                  onChange={(date) => setUpdateEndTime(date)}
+                  onChange={(date) => {
+                    if(date! <= updateStartTime!) {
+                      toast.error('End time can not behind of Start time!');
+                      return;
+                    }
+                    setUpdateEndTime(date);
+                  }}
                   showTimeSelect
                   dateFormat="dd MMM yyyy, h:mm aa"
                   minDate={updateStartTime || new Date()}
@@ -574,7 +580,16 @@ export default function Home() {
                 </label>
                 <DatePicker
                   selected={endTime}
-                  onChange={(date) => setEndTime(date)}
+                  onChange={(date) => {
+                    if(date! <= startTime!) {
+                      toast.error('End time can not behind of Start time!');
+                      return;
+                    } else if(date! == startTime!) {
+                      toast.error('End time and Start time can not be same!');
+                      return;
+                    }
+                    setEndTime(date);
+                  }}
                   showTimeSelect
                   dateFormat="dd MMM yyyy, h:mm aa"
                   minDate={startTime || new Date()}
