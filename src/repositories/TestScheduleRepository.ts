@@ -17,7 +17,7 @@ class TestScheduleRepository {
     }
 
     async getAllTest(): Promise<ISchedule[]> {
-        const test = await this.scheduleModel.find().lean();
+        const test = await this.scheduleModel.find().sort({ startTime: -1 }).lean();
         return test;
     }
 
