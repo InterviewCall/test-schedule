@@ -3,5 +3,5 @@ export const siteConfig = {
     description:
       'Manage and schedule tests efficiently with InterviewCall Test Schedule Portal.',
     /** Without additional '/' on the end, e.g. https://theodorusclarence.com */
-    url: 'https://www.schedule.interviewcall.club',
+    url: 'https://www.test-schedule.interviewcall.club',
 };
