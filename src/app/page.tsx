@@ -3,7 +3,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import clsx from 'clsx';
-import { addMinutes } from 'date-fns';
+// import { addMinutes } from 'date-fns';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import {
@@ -387,8 +387,8 @@ export default function Home() {
                   showTimeSelect
                   dateFormat="dd MMM yyyy, h:mm aa"
                   minDate={updateStartTime || new Date()}
-                  minTime={updateStartTime ? addMinutes(updateStartTime, 30) : undefined}
-                  maxTime={updateStartTime ? addMinutes(updateStartTime, 120) : undefined}
+                  // minTime={updateStartTime ? addMinutes(updateStartTime, 30) : undefined}
+                  // maxTime={updateStartTime ? addMinutes(updateStartTime, 120) : undefined}
                   disabled={!updateStartTime}
                   placeholderText="Select End Date & Time"
                   className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
@@ -578,8 +578,8 @@ export default function Home() {
                   showTimeSelect
                   dateFormat="dd MMM yyyy, h:mm aa"
                   minDate={startTime || new Date()}
-                  minTime={startTime ? addMinutes(startTime, 30) : undefined}
-                  maxTime={startTime ? addMinutes(startTime, 120) : undefined}
+                  // minTime={startTime ? addMinutes(startTime, 30) : undefined}
+                  // maxTime={startTime ? addMinutes(startTime, 60) : undefined}
                   disabled={!startTime}
                   placeholderText="Select End Date & Time"
                   className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
