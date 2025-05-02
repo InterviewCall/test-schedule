@@ -384,10 +384,10 @@ export default function Home() {
                 <DatePicker
                   selected={updateEndTime}
                   onChange={(date) => {
-                    if(date! <= updateStartTime!) {
-                      toast.error('End time can not behind of Start time!');
-                      return;
-                    }
+                    // if(date! <= updateStartTime!) {
+                    //   toast.error('End time can not behind of Start time!');
+                    //   return;
+                    // }
                     setUpdateEndTime(date);
                   }}
                   showTimeSelect
@@ -581,13 +581,13 @@ export default function Home() {
                 <DatePicker
                   selected={endTime}
                   onChange={(date) => {
-                    if(date! <= startTime!) {
-                      toast.error('End time can not behind of Start time!');
-                      return;
-                    } else if(date! == startTime!) {
-                      toast.error('End time and Start time can not be same!');
-                      return;
-                    }
+                    // if(date! <= startTime!) {
+                    //   toast.error('End time can not behind of Start time!');
+                    //   return;
+                    // } else if(date! == startTime!) {
+                    //   toast.error('End time and Start time can not be same!');
+                    //   return;
+                    // }
                     setEndTime(date);
                   }}
                   showTimeSelect
