@@ -51,6 +51,11 @@ class TestScheduleRepository {
         return test;
     }
 
+    async getTestsByTestStatus(testStatus: TEST_STATUS) {
+        const tests = await this.scheduleModel.find({ testStatus }).sort({ startTime: -1 }).lean();
+        return tests;
+    }
+
     async updateTestStatus(email: string, status: TEST_STATUS) {
         const candidate = await this.scheduleModel.findOne({ candidateEmail: email });
         if(!candidate) {
@@ -97,6 +102,7 @@ class TestScheduleRepository {
         const candidate = await this.scheduleModel.findOneAndUpdate({ candidateEmail: email }, {
             reportCard,
             percentage,
+            testStatus: TEST_STATUS.SUBMITTED
         }, { new: true }).lean();
 
         if(!candidate) {

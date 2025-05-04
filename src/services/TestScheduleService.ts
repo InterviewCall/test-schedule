@@ -54,6 +54,15 @@ class TestScheduleService {
         }
     }
 
+    async getAllTestsByTestStattus(testStatus: TEST_STATUS) {
+        try {
+            const tests = await this.testScheduleRepository.getTestsByTestStatus(testStatus);
+            return tests;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async updateTestStatus(email: string, status: TEST_STATUS) {
         try {
             await this.testScheduleRepository.updateTestStatus(email, status);

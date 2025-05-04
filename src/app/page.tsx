@@ -1,10 +1,10 @@
 'use client';
 import 'react-datepicker/dist/react-datepicker.css';
 
-import axios, { AxiosError, AxiosResponse } from 'axios';
-import clsx from 'clsx';
+import axios from 'axios';
 // import { addMinutes } from 'date-fns';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   FormEvent,
@@ -18,17 +18,9 @@ import DatePicker from 'react-datepicker';
 import toast from 'react-hot-toast';
 
 import Loader from '@/components/Loader';
-import Ratings from '@/components/Ratings';
 import { advisorOptions } from '@/constants';
 import { UserContext } from '@/contexts/UserContext';
-import {
-  Details,
-  ErrorResponse,
-  OptionType,
-  Test,
-  TestResponse,
-} from '@/types';
-import { formatDate, formatTime } from '@/utils';
+import { Details, OptionType } from '@/types';
 
 const Select = dynamic(() => import('react-select'), { ssr: false });
 
@@ -167,7 +159,7 @@ const Select = dynamic(() => import('react-select'), { ssr: false });
 
 export default function Home() {
   const { userDetails } = useContext(UserContext);
-  const [test, setTest] = useState<Test[]>([]);
+  // const [test, setTest] = useState<Test[]>([]);
   const [showCandidates, setShowCandidates] = useState(false);
   const [loading, setLoading] = useState(false);
   // const [dateOfTest, setDateOfTest] = useState<Date | null>(null);
@@ -177,16 +169,15 @@ export default function Home() {
   const [endTime, setEndTime] = useState<Date | null>(null);
   const [updateEndTime, setUpdateEndTime] = useState<Date | null>(null);
   const [updateEmail, setUpdateEmail] = useState('');
-  const [showeEmail, setShowEmail] = useState('');
+  // const [showeEmail, setShowEmail] = useState('');
   const [selectAdvisor, setSelecteAdvisor] = useState<OptionType | null>(null);
   const [formData, setFormData] = useState<Details>({
     candidateName: '',
     candidateEmail: '',
   });
-  const emailRef = useRef<HTMLDialogElement>(null!);
+  // const emailRef = useRef<HTMLDialogElement>(null!);
   const slotUpdateRef = useRef<HTMLDialogElement>(null!);
   const router = useRouter();
-
   useEffect(() => {
     if (userDetails === undefined) return;
 
@@ -196,36 +187,12 @@ export default function Home() {
       const showCandidate = sessionStorage.getItem('showCandidate');
       if (showCandidate) {
         setShowCandidates(true);
-        fetchTests();
+        // fetchTests();
       }
     }
     // console.log(test);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userDetails]);
-
-  useEffect(() => {
-    console.log(test);
-  }, [test]);
-
-  const fetchTests = async () => {
-    try {
-      if (!showCandidates) {
-        setShowCandidates(true);
-        sessionStorage.setItem('showCandidate', JSON.stringify(true));
-      }
-      setLoading(true);
-      const response: AxiosResponse<TestResponse> =
-        await axios.get('/api/get-tests');
-      setTest(response.data.data);
-    } catch (error) {
-      console.log(error);
-      const err = error as AxiosError<ErrorResponse>;
-      const message = err.response?.data.message || 'Something went wrong';
-      toast.error(message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -250,7 +217,7 @@ export default function Home() {
         setStartTime(null);
         setEndTime(null);
         setSelecteAdvisor(null);
-        fetchTests();
+        // fetchTests();
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -279,7 +246,7 @@ export default function Home() {
       });
       setLoading(false);
       toast.success('Successfully updated the schedule');
-      fetchTests();
+      // fetchTests();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       const message = error.response.data.message;
@@ -313,26 +280,6 @@ export default function Home() {
   return (
     <main className="w-full min-h-[100dvh] bg-white relative">
       {loading && <Loader />}
-      <dialog id="my_modal_1" className="modal" ref={emailRef}>
-        <div className="modal-box">
-          <h3 className="font-bold text-lg">Email Address</h3>
-          <p className="py-4">{showeEmail}</p>
-          <div className="modal-action">
-            <form>
-              {/* if there is a button in form, it will close the modal */}
-              <button
-                className="btn"
-                onClick={(e) => {
-                  e.preventDefault();
-                  emailRef.current.close();
-                }}
-              >
-                Close
-              </button>
-            </form>
-          </div>
-        </div>
-      </dialog>
 
       <dialog
         id="my_modal_2"
@@ -340,8 +287,6 @@ export default function Home() {
         ref={slotUpdateRef}
       >
         <div className="modal-box bg-white overflow-visible">
-          {/* <h3 className='font-bold text-lg'>Email Address</h3> */}
-          {/* <p className='py-4'>{showeEmail}</p> */}
           <div className="overflow-visible">
             <form className="flex flex-col gap-y-4" onSubmit={updateTimeSlot}>
               <input
@@ -356,49 +301,37 @@ export default function Home() {
                 required
               />
 
-              {/* <DatePicker
-                selected={updateDateOfTest}
+              <DatePicker
+                selected={updateStartTime}
                 onChange={(date) => {
-                  setUpdateDateOfTest(date);
+                  setUpdateStartTime(date);
+                  setUpdateEndTime(null); // Reset end time when start changes
                 }}
-                dateFormat="dd MMMM, yyyy"
+                showTimeSelect
+                dateFormat="dd MMM yyyy, h:mm aa"
                 minDate={new Date()}
-                placeholderText="Select Date"
-                popperPlacement="bottom"
+                placeholderText="Select Start Date & Time"
                 className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-              /> */}
+              />
 
-                  <DatePicker
-                    selected={updateStartTime}
-                    onChange={(date) => {
-                      setUpdateStartTime(date);
-                      setUpdateEndTime(null); // Reset end time when start changes
-                    }}
-                    showTimeSelect
-                    dateFormat="dd MMM yyyy, h:mm aa"
-                    minDate={new Date()}
-                    placeholderText="Select Start Date & Time"
-                    className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                  />
-
-                <DatePicker
-                  selected={updateEndTime}
-                  onChange={(date) => {
-                    // if(date! <= updateStartTime!) {
-                    //   toast.error('End time can not behind of Start time!');
-                    //   return;
-                    // }
-                    setUpdateEndTime(date);
-                  }}
-                  showTimeSelect
-                  dateFormat="dd MMM yyyy, h:mm aa"
-                  minDate={updateStartTime || new Date()}
-                  // minTime={updateStartTime ? addMinutes(updateStartTime, 30) : undefined}
-                  // maxTime={updateStartTime ? addMinutes(updateStartTime, 120) : undefined}
-                  disabled={!updateStartTime}
-                  placeholderText="Select End Date & Time"
-                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                />
+              <DatePicker
+                selected={updateEndTime}
+                onChange={(date) => {
+                  // if(date! <= updateStartTime!) {
+                  //   toast.error('End time can not behind of Start time!');
+                  //   return;
+                  // }
+                  setUpdateEndTime(date);
+                }}
+                showTimeSelect
+                dateFormat="dd MMM yyyy, h:mm aa"
+                minDate={updateStartTime || new Date()}
+                // minTime={updateStartTime ? addMinutes(updateStartTime, 30) : undefined}
+                // maxTime={updateStartTime ? addMinutes(updateStartTime, 120) : undefined}
+                disabled={!updateStartTime}
+                placeholderText="Select End Date & Time"
+                className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+              />
               {/* if there is a button in form, it will close the modal */}
               <button className="btn btn-success" type="submit">
                 Update
@@ -466,35 +399,6 @@ export default function Home() {
                 />
               </div>
 
-              {/* <div className="space-y-2">
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Select Date
-                </label>
-
-                <DatePicker
-                  selected={dateOfTest}
-                  onChange={(date) => {
-                    setDateOfTest(date);
-                  }}
-                  dateFormat="dd MMMM, yyyy"
-                  minDate={new Date()}
-                  placeholderText="Select Date"
-                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                />
-                <input
-                  id='email'
-                  type='email'
-                  name='email'
-                  autoComplete='off'
-                  value={formData.email}
-                  onChange={handleChange}
-                  className='w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700'
-                  required
-                />
-              </div> */}
               <div className="space-y-2">
                 <label
                   htmlFor="address"
@@ -502,77 +406,23 @@ export default function Home() {
                 >
                   Select Time Slot
                 </label>
-                  {/* <DatePicker
-                    selected={startTime}
-                    onChange={(time) => {
-                      setStartTime(time);
-                      setEndTime(null); // Reset end time when start time changes
-                    }}
-                    showTimeSelect
-                    showTimeSelectOnly
-                    timeIntervals={30} // Allows only 30-minute intervals
-                    timeFormat="h:mm aa"
-                    dateFormat="h:mm aa"
-                    placeholderText="Select Start Time"
-                    className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                  /> */}
 
-                  <DatePicker
-                    selected={startTime}
-                    onChange={(date) => {
-                      setStartTime(date);
-                      setEndTime(null); // Reset end time when start changes
-                    }}
-                    showTimeSelect
-                    dateFormat="dd MMM yyyy, h:mm aa"
-                    minDate={new Date()}
-                    placeholderText="Select Start Date & Time"
-                    className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                  />
-
-                  {/* <DatePicker
-                    selected={endTime}
-                    onChange={(time) => {
-                      setEndTime(time);
-                    }}
-                    showTimeSelect
-                    showTimeSelectOnly
-                    timeIntervals={30}
-                    timeFormat="h:mm aa"
-                    dateFormat="h:mm aa"
-                    placeholderText="Select End Time"
-                    minTime={startTime ? addMinutes(startTime, 30) : undefined} // Ensures 30-min gap
-                    maxTime={startTime ? addMinutes(startTime, 60) : undefined}
-                    disabled={!startTime} // Enable only after selecting start time
-                    className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                  /> */}
-
-                  {/* <DatePicker
-                    selected={endTime}
-                    onChange={(date) => setEndTime(date)}
-                    showTimeSelect
-                    dateFormat="dd MMM yyyy, h:mm aa"
-                    minDate={startTime || new Date()}
-                    minTime={startTime ? addMinutes(startTime, 30) : undefined}
-                    maxTime={startTime ? addMinutes(startTime, 120) : undefined}
-                    disabled={!startTime}
-                    placeholderText="Select End Date & Time"
-                    className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                  /> */}
-                </div>
-                {/* <input
-                  id='address'
-                  type='text'
-                  name='address'
-                  autoComplete='off'
-                  value={formData.address}
-                  onChange={handleChange}
-                  className='w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700'
-                  required
-                /> */}
+                <DatePicker
+                  selected={startTime}
+                  onChange={(date) => {
+                    setStartTime(date);
+                    setEndTime(null); // Reset end time when start changes
+                  }}
+                  showTimeSelect
+                  dateFormat="dd MMM yyyy, h:mm aa"
+                  minDate={new Date()}
+                  placeholderText="Select Start Date & Time"
+                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                />
+              </div>
 
               <div className="space-y-2">
-              <label
+                <label
                   htmlFor="address"
                   className="text-sm block font-medium text-gray-700 md:opacity-0 max-md:hidden"
                 >
@@ -626,16 +476,6 @@ export default function Home() {
                     }),
                   }}
                 />
-                {/* <input
-                  id='occupation'
-                  type='text'
-                  name='occupation'
-                  autoComplete='off'
-                  value={formData.occupation}
-                  onChange={handleChange}
-                  className='w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700'
-                  required
-                /> */}
               </div>
             </div>
 
@@ -657,292 +497,18 @@ export default function Home() {
           </form>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md text-black">
-          <h2 className="text-xl font-semibold text-gray-700 p-6 border-b">
-            Candidate List
-          </h2>
-
+        <div className="bg-white rounded-lg text-black">
           <div className="max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-100">
-            {/* Desktop Table Header */}
-            <div className="hidden lg:grid grid-cols-9 bg-gray-50 text-[12px] font-medium text-gray-500 tracking-wider text-center p-3">
-              {[
-                'Name',
-                'Email',
-                'Date Of Test',
-                'Time Slot',
-                'Status',
-                'Report',
-                'Percentage',
-                'Invited By',
-                'Ratings',
-              ].map((header) => (
-                <div key={header} className="p-2 uppercase border-b font-bold">
-                  {header}
-                </div>
-              ))}
-            </div>
-
             {!showCandidates && (
               <div className="h-[200px] flex justify-center items-center">
-                <button
-                  className="btn btn-accent text-white"
-                  onClick={fetchTests}
-                >
-                  Show Candidates
-                </button>
+                <Link className="btn btn-accent text-white" href="/tests">
+                  Show All Tests
+                </Link>
               </div>
             )}
-
-            {showCandidates && test.length == 0 && (
-              <div className="h-[200px] flex justify-center items-center">
-                No Test Schedules Right Now
-              </div>
-            )}
-
-            {/* Candidates List */}
-            {test.length > 0 &&
-              showCandidates == true &&
-              test.map((candidate, index) => (
-                <div
-                  key={index}
-                  className="grid grid-cols-1 text-xs lg:grid-cols-9 bg-white border-b hover:bg-gray-50 transition"
-                >
-                  {/* Desktop (grid items) */}
-                  <div className="hidden lg:block p-2 text-center">
-                    {candidate.candidateName}
-                  </div>
-                  <div
-                    className="hidden lg:block p-2 text-center cursor-pointer hover:text-blue-600 duration-500"
-                    onClick={() => {
-                      setShowEmail(candidate.candidateEmail);
-                      emailRef.current.showModal();
-                    }}
-                  >
-                    Show Email
-                  </div>
-                  <div className="hidden lg:block p-2 text-center">
-                    {formatDate(candidate.startTime)}
-                  </div>
-                  <div className="hidden lg:block p-2 text-center">{`${formatTime(candidate.startTime)}-${formatTime(candidate.endTime)}`}</div>
-                  <div className="hidden lg:block p-2 text-center">
-                    {candidate.testStatus}
-                  </div>
-                  <div
-                    className={clsx(
-                      'hidden lg:block p-2 text-center',
-                      candidate.reportCard
-                        ? 'cursor-pointer hover:text-blue-600 duration-500'
-                        : 'pointer-events-none'
-                    )}
-                    onClick={() => window.open(candidate.reportCard!, '_blank')}
-                  >
-                    {candidate.reportCard ? 'Show Report' : 'N/A'}
-                  </div>
-                  <div className="hidden lg:block p-2 text-center">
-                    {candidate?.percentage != null
-                      ? candidate.percentage > 50
-                        ? `${candidate.percentage}% (passed)`
-                        : `${candidate.percentage}% (failed)`
-                      : 'N/A'}
-                  </div>
-                  <div className="hidden lg:block p-2 text-center">
-                    {candidate.invitedBy}
-                  </div>
-                  <div className="hidden lg:block p-2 text-center">
-                    {!candidate.ratings ? (
-                      'N/A'
-                    ) : (
-                      <Ratings rating={candidate.ratings} />
-                    )}
-                  </div>
-
-                  {/* Mobile (Card format) */}
-                  <div className="block lg:hidden p-4">
-                    <div className="mb-2">
-                      <span className="font-semibold">Name:</span>{' '}
-                      {candidate.candidateName}
-                    </div>
-                    <div className="mb-2">
-                      <span className="font-semibold">Email:</span>
-                      <span
-                        className="text-blue-600 underline cursor-pointer ml-1"
-                        onClick={() => {
-                          setShowEmail(candidate.candidateEmail);
-                          emailRef.current.showModal();
-                        }}
-                      >
-                        Show Email
-                      </span>
-                    </div>
-                    <div className="mb-2">
-                      <span className="font-semibold">Date Of Test:</span>{' '}
-                      {formatDate(candidate.startTime)}
-                    </div>
-                    <div className="mb-2">
-                      <span className="font-semibold">Time Slot:</span>{' '}
-                      {`${formatTime(candidate.startTime)}-${formatTime(candidate.endTime)}`}
-                    </div>
-                    <div className="mb-2">
-                      <span className="font-semibold">Status:</span>{' '}
-                      {candidate.testStatus}
-                    </div>
-                    <div className="mb-2">
-                      <span className="font-semibold">Report:</span>
-                      {candidate.reportCard ? (
-                        <span
-                          className="text-blue-600 underline cursor-pointer ml-1"
-                          onClick={() =>
-                            window.open(candidate.reportCard!, '_blank')
-                          }
-                        >
-                          Show Report
-                        </span>
-                      ) : (
-                        <span className="ml-1">N/A</span>
-                      )}
-                    </div>
-                    <div className="mb-2">
-                      <span className="font-semibold">Percentage:</span>{' '}
-                      {candidate?.percentage != null
-                        ? candidate.percentage > 50
-                          ? `${candidate.percentage}% (passed)`
-                          : `${candidate.percentage}% (failed)`
-                        : 'N/A'}
-                    </div>
-                    <div className="mb-2">
-                      <span className="font-semibold">Invited By:</span>{' '}
-                      {candidate.invitedBy}
-                    </div>
-                    <div>
-                      <span className="font-semibold">Ratings:</span>{' '}
-                      {!candidate.ratings ? (
-                        ' N/A'
-                      ) : (
-                        <Ratings rating={candidate.ratings} />
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
           </div>
         </div>
       </div>
     </main>
   );
-}
-
-{
-  /* <div className='overflow-x-auto'>
-            <table className='w-full'>
-              <thead className='bg-gray-50'>
-                <tr>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Name</th>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Email</th>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Date Of Test</th>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Start Time</th>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>End Time</th>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Status</th>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Report</th>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Percentage</th>
-                </tr>
-              </thead>
-              <tbody className='bg-white divide-y divide-gray-200'>
-                {people.map((person) => (
-                  <tr key={person.id} className='hover:bg-gray-50'>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>{person.name}</td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>{person.age}</td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>{person.email}</td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>{person.address}</td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>{person.occupation}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div> */
-}
-
-{
-  /* <div className='bg-white rounded-lg shadow-md'>
-<h2 className='text-xl font-semibold text-gray-700 p-6 border-b'>
-  Candidate List
-</h2>
-
-<div className='max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-100'>
-  <div className='grid grid-cols-9 bg-gray-50 text-[12px] font-medium text-gray-500 tracking-wider text-center p-3'>
-    {[
-      'Name',
-      'Email',
-      'Date Of Test',
-      'Time Slot',
-      'Status',
-      'Report',
-      'Percentage',
-      'Invited By',
-      'Ratings'
-    ].map((header) => (
-      <div
-        key={header}
-        className='p-2 uppercase border-b font-bold text-center'
-      >
-        {header}
-      </div>
-    ))}
-
-    {test.length > 0 && test.map((candidate, index) => (
-      <Fragment key={index}>
-        <div
-          className='p-2 border-b text-center'
-        >
-          {candidate.candidateName}
-        </div>
-        <div
-          className='p-2 border-b text-center cursor-pointer hover:text-blue-600 duration-500'
-          onClick={() => {
-            setShowEmail(candidate.candidateEmail);
-            emailRef.current.showModal();
-          }}
-        >
-          Show Email
-        </div>
-        <div
-          className='p-2 border-b text-center'
-        >
-          {formatDate(candidate.dateOfTest)}
-        </div>
-        <div
-          className='p-2 border-b text-center'
-        >
-          {`${formatTime(candidate.startTime)}-${formatTime(candidate.endTime)}`}
-        </div>
-        <div
-          className='p-2 border-b text-center'
-        >
-          {candidate.testStatus}
-        </div>
-        <div
-          className={clsx('p-2 border-b text-center', candidate.reportCard ? 'cursor-pointer hover:text-blue-600 duration-500' : 'pointer-events-none')}
-          onClick={() => window.open(candidate.reportCard!, '_blank')}
-        >
-          {candidate.reportCard ? 'Show Report' : 'N/A'}
-        </div>
-        <div
-          className='p-2 border-b text-center'
-        >
-          {candidate?.percentage != null ? (candidate.percentage > 50 ? `${candidate.percentage}% (passed)` : `${candidate.percentage}% (failed)`) : 'N/A'}
-        </div>
-        <div
-          className='p-2 border-b text-center'
-        >
-          {candidate.invitedBy}
-        </div>
-        <div
-          className='p-2 border-b text-center'
-        >
-          {!candidate.ratings ? 'N/A' : <Ratings rating={candidate.ratings} />}
-        </div>
-      </Fragment>
-    ))}
-  </div>
-</div>
-</div> */
 }

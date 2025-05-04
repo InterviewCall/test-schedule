@@ -7,6 +7,8 @@ import { Toaster } from 'react-hot-toast';
 import { siteConfig } from '@/constants/config';
 import UserContextProvider from '@/contexts/UserContext';
 
+import Providers from './providers';
+
 // const geistSans = Geist({
 //   variable: '--font-geist-sans',
 //   subsets: ['latin'],
@@ -61,8 +63,10 @@ export default function RootLayout({
         className='font-poppins'
       >
         <UserContextProvider>
-          <Toaster position='top-center' />
-          {children}
+          <Providers>
+            <Toaster position='top-center' />
+            {children}
+          </Providers>
         </UserContextProvider>
       </body>
     </html>

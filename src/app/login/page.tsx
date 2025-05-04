@@ -39,6 +39,8 @@ export default function LoginPage() {
         const err = error as AxiosError<ErrorResponse>;
         const message = err.response?.data.message || 'Something went wrong';
         toast.error(message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
