@@ -160,7 +160,7 @@ const Select = dynamic(() => import('react-select'), { ssr: false });
 export default function Home() {
   const { userDetails } = useContext(UserContext);
   // const [test, setTest] = useState<Test[]>([]);
-  const [showCandidates, setShowCandidates] = useState(false);
+  // const [showCandidates, setShowCandidates] = useState(false);
   const [loading, setLoading] = useState(false);
   // const [dateOfTest, setDateOfTest] = useState<Date | null>(null);
   // const [updateDateOfTest, setUpdateDateOfTest] = useState<Date | null>(null);
@@ -186,7 +186,7 @@ export default function Home() {
     } else {
       const showCandidate = sessionStorage.getItem('showCandidate');
       if (showCandidate) {
-        setShowCandidates(true);
+        // setShowCandidates(true);
         // fetchTests();
       }
     }
@@ -499,13 +499,11 @@ export default function Home() {
 
         <div className="bg-white rounded-lg text-black">
           <div className="max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-100">
-            {!showCandidates && (
               <div className="h-[200px] flex justify-center items-center">
                 <Link className="btn btn-accent text-white" href="/tests">
                   Show All Tests
                 </Link>
               </div>
-            )}
           </div>
         </div>
       </div>
