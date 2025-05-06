@@ -75,7 +75,7 @@ const AllCandidates: FC = () => {
         ))}
       </div>
 
-      <div className="divide-y lg:max-h-[82dvh] max-h-[87dvh] overflow-y-auto divide-gray-200 shadow overflow-hidden rounded-b-md">
+      <div className="divide-y lg:max-h-[75dvh] max-h-[85dvh] overflow-y-auto divide-gray-200 shadow overflow-hidden rounded-b-md">
         {tests.length > 0 ? (
           tests.map((candidate, index) => (
             <div
