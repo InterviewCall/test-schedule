@@ -2,6 +2,7 @@
 import 'react-datepicker/dist/react-datepicker.css';
 
 import axios from 'axios';
+import { addMinutes } from 'date-fns';
 // import { addMinutes } from 'date-fns';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -317,17 +318,13 @@ export default function Home() {
               <DatePicker
                 selected={updateEndTime}
                 onChange={(date) => {
-                  // if(date! <= updateStartTime!) {
-                  //   toast.error('End time can not behind of Start time!');
-                  //   return;
-                  // }
                   setUpdateEndTime(date);
                 }}
                 showTimeSelect
                 dateFormat="dd MMM yyyy, h:mm aa"
                 minDate={updateStartTime || new Date()}
-                // minTime={updateStartTime ? addMinutes(updateStartTime, 30) : undefined}
-                // maxTime={updateStartTime ? addMinutes(updateStartTime, 120) : undefined}
+                minTime={userDetails.userType == 'user' ? updateStartTime ? addMinutes(updateStartTime, 60) : undefined : undefined}
+                maxTime={userDetails.userType == 'user' ? updateStartTime ? addMinutes(updateStartTime, 60) : undefined : undefined}
                 disabled={!updateStartTime}
                 placeholderText="Select End Date & Time"
                 className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
@@ -431,20 +428,13 @@ export default function Home() {
                 <DatePicker
                   selected={endTime}
                   onChange={(date) => {
-                    // if(date! <= startTime!) {
-                    //   toast.error('End time can not behind of Start time!');
-                    //   return;
-                    // } else if(date! == startTime!) {
-                    //   toast.error('End time and Start time can not be same!');
-                    //   return;
-                    // }
                     setEndTime(date);
                   }}
                   showTimeSelect
                   dateFormat="dd MMM yyyy, h:mm aa"
                   minDate={startTime || new Date()}
-                  // minTime={startTime ? addMinutes(startTime, 30) : undefined}
-                  // maxTime={startTime ? addMinutes(startTime, 60) : undefined}
+                  minTime={userDetails.userType == 'user' ? startTime ? addMinutes(startTime, 60) : undefined : undefined}
+                  maxTime={userDetails.userType == 'user' ? startTime ? addMinutes(startTime, 60) : undefined: undefined}
                   disabled={!startTime}
                   placeholderText="Select End Date & Time"
                   className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
