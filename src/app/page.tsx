@@ -172,6 +172,7 @@ export default function Home() {
   const [updateEmail, setUpdateEmail] = useState('');
   // const [showeEmail, setShowEmail] = useState('');
   const [selectAdvisor, setSelecteAdvisor] = useState<OptionType | null>(null);
+  const [updateAdvisor, setUpdateAdvisor] = useState<OptionType | undefined>(undefined);
   const [formData, setFormData] = useState<Details>({
     candidateName: '',
     candidateEmail: '',
@@ -244,6 +245,7 @@ export default function Home() {
         updateEmail,
         updateStartTime,
         updateEndTime,
+        invitedBy: updateAdvisor?.value
       });
       setLoading(false);
       toast.success('Successfully updated the schedule');
@@ -251,11 +253,13 @@ export default function Home() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       const message = error.response.data.message;
+      console.log(error);
       toast.error(message);
     } finally {
       setUpdateEmail('');
       setUpdateStartTime(null);
       setUpdateEndTime(null);
+      setUpdateAdvisor(undefined);
     }
   }
 
@@ -330,6 +334,27 @@ export default function Home() {
                 className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
               />
               {/* if there is a button in form, it will close the modal */}
+
+                {userDetails.userType == 'admin' && (
+                  <Select
+                    options={advisorOptions}
+                    value={updateAdvisor}
+                    placeholder="Select Advisor Name"
+                    onChange={(newValue) =>
+                      setUpdateAdvisor(newValue as OptionType)
+                    }
+                    className="text-black"
+                    isSearchable
+                    styles={{
+                      control: (provided) => ({
+                        ...provided,
+                        padding: '0.15rem',
+                        borderRadius: '0.375rem',
+                        cursor: 'pointer',
+                      }),
+                    }}
+                 />)}
+                
               <button className="btn btn-success" type="submit">
                 Update
               </button>

@@ -4,9 +4,9 @@ import { testScheduleService } from '@/lib/testScheduleServiceIntance';
 
 export async function PUT(req: NextRequest) {
     try {
-        const { updateEmail, updateStartTime, updateEndTime } = await req.json();
+        const { updateEmail, updateStartTime, updateEndTime, invitedBy } = await req.json();
         // if(updateDateOfTest) await testScheduleService.updateDateTimeSlot(updateEmail, updateStartTime, updateEndTime);
-        await testScheduleService.updateDateTimeSlot(updateEmail, updateStartTime, updateEndTime);
+        await testScheduleService.updateDateTimeSlot(updateEmail, updateStartTime, updateEndTime, invitedBy);
 
         return NextResponse.json({
             success: true,

@@ -11,8 +11,15 @@ class TestScheduleRepository {
         this.scheduleModel = ScheduleModel;
     }
 
-    async createTest(data: TestRequest): Promise<ISchedule> {
-        const test = await this.scheduleModel.create(data);
+    async createTest(data: TestRequest, mailId: string): Promise<ISchedule> {
+        const test = await this.scheduleModel.create({
+            candidateName: data.candidateName,
+            candidateEmail: data.candidateEmail,
+            startTime: data.startTime,
+            endTime: data.endTime,
+            invitedBy: data.invitedBy,
+            mailId: mailId
+        });
         return test;
     }
 
@@ -34,7 +41,17 @@ class TestScheduleRepository {
         return test;
     }
 
-    async getTest(email: string) {
+    async getTest(email: string, flag?: boolean) {
+        if(flag) {
+            const test = await this.scheduleModel.findOne({ candidateEmail: email }).lean();
+
+            if(!test) {
+                throw { message: 'No Credenials Found' };
+            }
+
+            return test;
+        }
+
         const test = await this.scheduleModel.findOne({ candidateEmail: email }, {
             candidateEmail: 1,
             candidateName: 1,
@@ -83,12 +100,17 @@ class TestScheduleRepository {
         await this.scheduleModel.updateOne({ candidateEmail: email }, { $set: { reportCard }});
     }
 
-    async updateDateTimeSlot(email: string, startTime: Date, endTime: Date) {
+    async updateDateTimeSlot(email: string, startTime: Date, endTime: Date, mailId: string, invitedBy?: string) {
         const updateFields: Partial<ISchedule> = {
             startTime,
             endTime,
+            mailId,
             testStatus: TEST_STATUS.INVITED
         };
+
+        if(invitedBy) {
+            updateFields.invitedBy = invitedBy;
+        }
 
         const candidate = await this.scheduleModel.findOneAndUpdate({ candidateEmail: email }, { $set: updateFields }, { new: true }).lean();
         if(!candidate) {

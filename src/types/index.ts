@@ -58,3 +58,7 @@ export interface User {
 export interface UserResponse {
     data: User
 }
+
+export interface EmailStatus {
+    data: string
+}

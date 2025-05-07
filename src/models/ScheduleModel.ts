@@ -12,6 +12,7 @@ export interface ISchedule extends Document {
     reportCard: string,
     percentage: number
     ratings: number
+    mailId: string
 }
 
 const scheduleSchema = new Schema<ISchedule>({
@@ -24,6 +25,11 @@ const scheduleSchema = new Schema<ISchedule>({
         type: String, 
         required: true,
         unique: true
+    },
+
+    mailId: {
+        type: String,
+        required: true,
     },
 
     startTime: {

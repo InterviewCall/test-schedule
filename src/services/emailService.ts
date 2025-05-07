@@ -5,7 +5,7 @@ import { TestEmailPlainText } from '../../texts/TestEmailPlainText';
 
 export async function sendEmail(date: string, timeSlot: string, maxStartTime: string, mailTo: string) {
     try {
-        await resend.emails.send({
+        const response = await resend.emails.send({
             from: 'InterviewCall <entrance-test@interviewcall.club>',
             to: mailTo,
             subject: 'InterviewCall Entrance Test Invitation',
@@ -14,7 +14,21 @@ export async function sendEmail(date: string, timeSlot: string, maxStartTime: st
         });
         return {
             success: true,
-            message: 'Successfully send the mail'
+            message: 'Successfully send the mail',
+            data: response.data?.id
+        };
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function retrieveEmail(id: string) {
+    try {
+        const response = await resend.emails.get(id);
+        return {
+            success: true,
+            message: 'OK',
+            data: response.data
         };
     } catch (error) {
         throw error;

@@ -3,7 +3,7 @@ import TestScheduleRepository from '@/repositories/TestScheduleRepository';
 import { TestRequest } from '@/types';
 import { formatDate, formatTime, getMaxStartTime } from '@/utils';
 
-import { sendEmail } from './emailService';
+import { retrieveEmail, sendEmail } from './emailService';
 
 class TestScheduleService {
     private testScheduleRepository;
@@ -14,15 +14,29 @@ class TestScheduleService {
 
     async createTest(data: TestRequest) {
         try {
-            const test = await this.testScheduleRepository.createTest(data);
             const date = formatDate(data.startTime);
             const timeSlot = `${formatTime(data.startTime)} - ${formatTime(data.endTime)}`;
             const maxStartTime = getMaxStartTime(data.endTime);
+            
+            const response = await sendEmail(date, timeSlot, formatTime(maxStartTime), data.candidateEmail);
 
-            await sendEmail(date, timeSlot, formatTime(maxStartTime), data.candidateEmail);
+            const test = await this.testScheduleRepository.createTest(data, response.data!);
             return test;
         } catch (error) {
-            console.log(error);
+            throw error;
+        }
+    }
+
+    async retrieveEmail(email: string) {
+        try {
+            const candidate = await this.testScheduleRepository.getTest(email, true);
+            if(candidate?.mailId) {
+                const response = await retrieveEmail(candidate.mailId);
+                return response.data?.last_event;
+            }
+
+            return '';
+        } catch (error) {
             throw error;
         }
     }
@@ -87,14 +101,15 @@ class TestScheduleService {
         }
     }
 
-    async updateDateTimeSlot(email: string, startTime: Date, endTime: Date, date?: Date) {
+    async updateDateTimeSlot(email: string, startTime: Date, endTime: Date, updateAdvisor?: string) {
         try {
-            const candidate = await this.testScheduleRepository.updateDateTimeSlot(email, startTime, endTime);
-            const testDate = date ? formatDate(date) : formatDate(candidate.startTime);
+            const testDate = formatDate(startTime);
             const timeSlot = `${formatTime(startTime)} - ${formatTime(endTime)}`;
             const maxStartTime = getMaxStartTime(endTime);
-
-            await sendEmail(testDate, timeSlot, formatTime(maxStartTime), email);
+            
+            const emailResponse = await sendEmail(testDate, timeSlot, formatTime(maxStartTime), email);
+            
+            await this.testScheduleRepository.updateDateTimeSlot(email, startTime, endTime, emailResponse.data!, updateAdvisor);
         } catch (error) {
             throw error;
         }
