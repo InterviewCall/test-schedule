@@ -208,7 +208,7 @@ export default function Home() {
       setLoading(true);
       const response = await axios.post('/api/schedule-test', {
         candidateName: formData.candidateName,
-        candidateEmail: formData.candidateEmail,
+        candidateEmail: formData.candidateEmail.toLowerCase(),
         startTime,
         endTime,
         invitedBy: selectAdvisor?.value,
@@ -253,7 +253,7 @@ export default function Home() {
       slotUpdateRef.current.close();
       setLoading(true);
       await axios.put('/api/update-schedule', {
-        updateEmail,
+        updateEmail: updateEmail.toLowerCase(),
         updateStartTime,
         updateEndTime,
         invitedBy: updateAdvisor?.value
