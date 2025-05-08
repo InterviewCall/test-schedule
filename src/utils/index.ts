@@ -32,3 +32,33 @@ export const getMaxStartTime = (time: Date) => {
   
   return fromZonedTime(adjustedTime, 'Asia/Kolkata');
 };
+
+export function isValidEmail(email: string): boolean {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email);
+}
+
+export const userDashBoard = [
+  'Name',
+  'Email',
+  'Date',
+  'Time Slot',
+  'Status',
+  'Report',
+  'Percentage',
+  'Invited By',
+  'Ratings',
+];
+
+export const adminDashBoard = [
+  'Select',
+  'Name',
+  'Email',
+  'Date',
+  'Time Slot',
+  'Status',
+  'Report',
+  'Percentage',
+  'Invited By',
+  'Ratings',
+];

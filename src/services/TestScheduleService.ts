@@ -140,6 +140,22 @@ class TestScheduleService {
             throw error;
         }
     }
+
+    async deleteManyTest(candidateEmails: string[], testStatus: TEST_STATUS | null) {
+        try {
+            await this.testScheduleRepository.deleteManyTest(candidateEmails);
+
+            if(testStatus) {
+                const currentTests = await this.testScheduleRepository.getTestsByTestStatus(testStatus);
+                return currentTests;
+            }
+
+            const currentTests = await this.testScheduleRepository.getAllTest();
+            return currentTests;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 export default TestScheduleService;

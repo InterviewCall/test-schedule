@@ -1,8 +1,8 @@
 'use client';
 
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import clsx from 'clsx';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -10,17 +10,21 @@ import Loader from '@/components/Loader';
 import Ratings from '@/components/Ratings';
 import StatusFilter from '@/components/StatusFilter';
 import { UserContext } from '@/contexts/UserContext';
-import { EmailStatus, Test } from '@/types';
-import { formatDate, formatTime } from '@/utils';
+import { EmailStatus, ErrorResponse, Test, TestResponse } from '@/types';
+import { adminDashBoard, formatDate, formatTime, userDashBoard } from '@/utils';
 
 const AllCandidates: FC = () => {
   const [tests, setTests] = useState<Test[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showEmail, setShowEmail] = useState('');
   const [status, setStatus] = useState('');
+  const [emails, setEmails] = useState<string[]>([]);
   const { userDetails } = useContext(UserContext);
   const emailRef = useRef<HTMLDialogElement>(null!);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const header = userDetails.userType == 'admin' ? adminDashBoard : userDashBoard;
 
   useEffect(() => {
     if (!userDetails) {
@@ -60,7 +64,45 @@ const AllCandidates: FC = () => {
       setStatus(res); 
 
     } catch (error) {
-      throw error;
+      const err = error as AxiosError<ErrorResponse>;
+      const message = err.response?.data.message || 'Something went wrong';
+      toast.error(message);
+    }
+  }
+
+  function handleCheck(email: string, checked: boolean) {
+    if(checked) {
+      setEmails((prev) => [...prev, email]);
+    } else {
+      setEmails((prev) => prev.filter((existingEmail) => existingEmail != email));
+    }
+  }
+
+  async function deleteCandidate() {
+    if(emails.length == 0) {
+      toast.error('No candidates selected');
+      return;
+    }
+
+    try {
+      const status = searchParams.get('status');
+      const response: Promise<AxiosResponse<TestResponse>> = axios.delete('/api/delete-many-tests', {
+        data: { emails },
+        params: { status }
+      });
+
+      toast.promise(response, {
+        loading: 'Deleting...',
+        success: 'Successfully Deleted',
+        error: 'Something went wrong!'
+      });
+
+      const res = (await response).data.data;
+      setTests(res);
+    } catch (error) {
+      const err = error as AxiosError<ErrorResponse>;
+      const message = err.response?.data.message || 'Something Went wrong!';
+      toast.error(message);
     }
   }
 
@@ -93,23 +135,16 @@ const AllCandidates: FC = () => {
         </div>
       </dialog>
 
-      <StatusFilter updateTests={updateTests} setLoading={setLoading} />
+      <div className='flex justify-between'>
+        {userDetails.userType == 'admin' && <button className='btn btn-error text-white m-6' onClick={deleteCandidate}>Delete Candidate</button>}
+
+        <StatusFilter updateTests={updateTests} setLoading={setLoading} />
+      </div>
 
       {/* Desktop View */}
-      <div className='hidden sticky lg:grid grid-cols-9 bg-indigo-600 text-white shadow-md rounded-t-md font-semibold text-center'>
-        {[
-          // 'Select',
-          'Name',
-          'Email',
-          'Date',
-          'Time Slot',
-          'Status',
-          'Report',
-          'Percentage',
-          'Invited By',
-          'Ratings',
-        ].map((header) => (
-          <div key={header} className='py-3 px-2 border-b'>
+      <div className={clsx(userDetails.userType == 'admin' ? 'lg:grid grid-cols-10' : 'lg:grid grid-cols-9', 'hidden sticky bg-indigo-600 text-white shadow-md rounded-t-md font-semibold text-center')}>
+        {header.map((header, idx) => (
+          <div key={idx} className='py-3 px-2 border-b'>
             {header}
           </div>
         ))}
@@ -120,15 +155,20 @@ const AllCandidates: FC = () => {
           tests.map((candidate, index) => (
             <div
               key={index}
-              className={clsx(
-                'grid grid-cols-1 lg:grid-cols-9 text-sm bg-white transition py-3 hover:bg-indigo-200',
+              className={clsx(userDetails.userType == 'admin' ? 'lg:grid-cols-10' : 'lg:grid-cols-9',
+                'grid grid-cols-1 text-sm bg-white transition py-3 hover:bg-indigo-200',
                 index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
               )}
             >
               {/* Desktop Cells */}
-              {/* <div className='flex justify-center'>
-                <input type="checkbox" className="checkbox checkbox-secondary" />
-              </div> */}
+              {userDetails.userType == 'admin' && <div className='flex lg:justify-center justify-end max-md:pr-5'>
+                <input 
+                  type="checkbox" 
+                  className="checkbox checkbox-secondary" 
+                  checked={emails.includes(candidate.candidateEmail)}
+                  onChange={(e) => handleCheck(candidate.candidateEmail, e.target.checked)}
+                />
+              </div>}
               <div className='hidden lg:block text-center'>
                 {/* <input type="checkbox" defaultChecked className="checkbox checkbox-secondary" /> */}
                 {candidate.candidateName}

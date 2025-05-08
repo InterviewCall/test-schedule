@@ -151,6 +151,12 @@ class TestScheduleRepository {
         }
         await this.scheduleModel.deleteOne({ candidateEmail: email });
     }
+
+    async deleteManyTest(candidateEmails: string[]) {
+        await this.scheduleModel.deleteMany({
+            candidateEmail: { $in: candidateEmails }
+        });
+    }
 }
 
 export default TestScheduleRepository;

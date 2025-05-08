@@ -22,6 +22,7 @@ import Loader from '@/components/Loader';
 import { advisorOptions } from '@/constants';
 import { UserContext } from '@/contexts/UserContext';
 import { Details, OptionType } from '@/types';
+import { isValidEmail } from '@/utils';
 
 const Select = dynamic(() => import('react-select'), { ssr: false });
 
@@ -198,6 +199,11 @@ export default function Home() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if(!isValidEmail(formData.candidateEmail)) {
+      toast.error('Invalid email format');
+      return;
+    }
+
     try {
       setLoading(true);
       const response = await axios.post('/api/schedule-test', {
@@ -238,6 +244,11 @@ export default function Home() {
 
   async function updateTimeSlot(e: FormEvent) {
     e.preventDefault();
+    if(!isValidEmail(updateEmail)) {
+      toast.error('Invalid email format');
+      return;
+    }
+
     try {
       slotUpdateRef.current.close();
       setLoading(true);
