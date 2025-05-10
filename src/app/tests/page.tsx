@@ -19,17 +19,19 @@ const AllCandidates: FC = () => {
   const [showEmail, setShowEmail] = useState('');
   const [status, setStatus] = useState('');
   const [emails, setEmails] = useState<string[]>([]);
+  const [header, setHeader] = useState<string[]>([]);
   const { userDetails } = useContext(UserContext);
   const emailRef = useRef<HTMLDialogElement>(null!);
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const header = userDetails.userType == 'admin' ? adminDashBoard : userDashBoard;
-
+  
   useEffect(() => {
     if (!userDetails) {
       router.replace('/');
+      return;
     }
+    setHeader(userDetails.userType === 'admin' ? adminDashBoard : userDashBoard);
   }, [userDetails, router]);
 
   function updateTests(tests: Test[]) {
@@ -106,6 +108,13 @@ const AllCandidates: FC = () => {
     }
   }
 
+  if (!userDetails)
+    return (
+      <div className="bg-white h-[100dvh]">
+        <Loader />
+      </div>
+    );
+
   return (
     <div className='w-full h-[100dvh] overflow-hidden bg-gray-50 text-black px-4'>
       {isLoading && <Loader />}
@@ -136,14 +145,14 @@ const AllCandidates: FC = () => {
       </dialog>
 
       <div className='flex justify-between'>
-        {userDetails.userType == 'admin' && <button className='btn btn-error text-white m-6' onClick={deleteCandidate}>Delete Candidate</button>}
+        {userDetails && userDetails.userType == 'admin' && <button className='btn btn-error text-white m-6' onClick={deleteCandidate}>Delete Candidate</button>}
 
         <StatusFilter updateTests={updateTests} setLoading={setLoading} />
       </div>
 
       {/* Desktop View */}
-      <div className={clsx(userDetails.userType == 'admin' ? 'lg:grid grid-cols-10' : 'lg:grid grid-cols-9', 'hidden sticky bg-indigo-600 text-white shadow-md rounded-t-md font-semibold text-center')}>
-        {header.map((header, idx) => (
+      <div className={clsx(userDetails && userDetails.userType == 'admin' ? 'lg:grid grid-cols-10' : 'lg:grid grid-cols-9', 'hidden sticky bg-indigo-600 text-white shadow-md rounded-t-md font-semibold text-center')}>
+        {header.length > 0 && header.map((header, idx) => (
           <div key={idx} className='py-3 px-2 border-b'>
             {header}
           </div>

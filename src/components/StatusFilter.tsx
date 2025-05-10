@@ -1,10 +1,13 @@
+'use client';
+
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { Check, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { FC, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { FC, useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
+import { UserContext } from '@/contexts/UserContext';
 import { ErrorResponse, Test, TestResponse } from '@/types';
 
 const statusOptions = ['Submitted', 'Expired', 'Invited'];
@@ -18,13 +21,19 @@ const StatusFilter: FC<Props> = ({ updateTests, setLoading }) => {
   const [open, setOpen] = useState(false);
   const searchParams = useSearchParams();
   const [testStatus, setTestStatus] = useState<string | null>(null);
+  const { userDetails } = useContext(UserContext);
+  const router = useRouter();
 
   useEffect(() => {
+    if(!userDetails) {
+      router.replace('/');
+      return;
+    }
     const status = searchParams.get('status');
     setTestStatus(status);
     fetchTests(status);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
+  }, [searchParams, userDetails]);
 
   async function fetchTests(testStatus: string | null) {
     try {
