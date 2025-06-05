@@ -5,14 +5,20 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --my-color: 0 100% 100%;
+  --radius-sm: 0.25rem;
+  --card: 0 0% 80%;
 }
 
 @theme inline {
+  --color-card: hsl(var(--card));
+  --color-mygo: var(--my-color);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-poppins: var(--font-poppins)
+  --font-poppins: var(--font-poppins);
+  --radius-sm: var(--redius-sm)
 }
 
 @media (prefers-color-scheme: dark) {

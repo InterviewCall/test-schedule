@@ -464,6 +464,10 @@ export default function Home() {
                 <DatePicker
                   selected={endTime}
                   onChange={(date) => {
+                    if(date! < startTime!) {
+                      toast.error('End time can not behind of start time');
+                      return;
+                    }
                     setEndTime(date);
                   }}
                   showTimeSelect
