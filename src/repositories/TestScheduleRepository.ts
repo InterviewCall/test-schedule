@@ -105,6 +105,9 @@ class TestScheduleRepository {
             startTime,
             endTime,
             mailId,
+            percentage: null,
+            reportCard: null,
+            ratings: null,
             testStatus: TEST_STATUS.INVITED
         };
 

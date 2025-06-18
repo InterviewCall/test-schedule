@@ -9,9 +9,9 @@ export interface ISchedule extends Document {
     endTime: Date
     invitedBy: string
     testStatus: TEST_STATUS
-    reportCard: string,
-    percentage: number
-    ratings: number
+    reportCard: string | null
+    percentage: number | null
+    ratings: number | null
     mailId: string
 }
 
