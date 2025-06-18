@@ -9,7 +9,7 @@ class AuthRepository {
         this.authModel = Auth;
     }
 
-    async createUser(userEmail: string, password: string, adminEmail: string) {
+    async createUser(userEmail: string, userName: string, password: string, adminEmail: string) {
         const admin = await this.authModel.findOne({ userEmail: adminEmail }).lean();
         if(!admin) {
             throw { message: 'No Credenials Found' };
@@ -17,7 +17,7 @@ class AuthRepository {
             throw { message: 'Only admin can add users' };
         }
 
-        const user = await this.authModel.create({ userEmail, userPassword: password });
+        const user = await this.authModel.create({ userEmail, userName, userPassword: password });
         return user;
     }
 
@@ -30,11 +30,11 @@ class AuthRepository {
             throw { message: 'Wrong password' };
         }
 
-        return await this.authModel.findOne({ userEmail }, { userEmail: 1, userType: 1, _id: 1 }).lean();
+        return await this.authModel.findOne({ userEmail }, { userEmail: 1, userName: 1, userType: 1, _id: 1 }).lean();
     }
 
     async getUser(userEmail: string) {
-        const user = await this.authModel.findOne({ userEmail }, { userEmail: 1, userType: 1, _id: 1 }).lean();
+        const user = await this.authModel.findOne({ userEmail }, { userEmail: 1, userName: 1, userType: 1, _id: 1 }).lean();
         return user;
     }
 }

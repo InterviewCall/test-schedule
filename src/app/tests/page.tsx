@@ -28,7 +28,7 @@ const AllCandidates: FC = () => {
   
   useEffect(() => {
     if (!userDetails) {
-      router.replace('/');
+      router.replace('/login');
       return;
     }
     setHeader(userDetails.userType === 'admin' ? adminDashBoard : userDashBoard);
@@ -151,7 +151,7 @@ const AllCandidates: FC = () => {
       </div>
 
       {/* Desktop View */}
-      <div className={clsx(userDetails && userDetails.userType == 'admin' ? 'lg:grid grid-cols-10' : 'lg:grid grid-cols-9', 'hidden sticky bg-indigo-600 text-white shadow-md rounded-t-md font-semibold text-center')}>
+      <div className={clsx(userDetails && userDetails.userType == 'admin' ? 'lg:grid grid-cols-10' : 'lg:grid grid-cols-8', 'hidden sticky bg-indigo-600 text-white shadow-md rounded-t-md font-semibold text-center')}>
         {header.length > 0 && header.map((header, idx) => (
           <div key={idx} className='py-3 px-2 border-b'>
             {header}
@@ -164,7 +164,7 @@ const AllCandidates: FC = () => {
           tests.map((candidate, index) => (
             <div
               key={index}
-              className={clsx(userDetails.userType == 'admin' ? 'lg:grid-cols-10' : 'lg:grid-cols-9',
+              className={clsx(userDetails.userType == 'admin' ? 'lg:grid-cols-10' : 'lg:grid-cols-8',
                 'grid grid-cols-1 text-sm bg-white transition py-3 hover:bg-indigo-200',
                 index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
               )}
@@ -212,7 +212,7 @@ const AllCandidates: FC = () => {
                   ? `${candidate.percentage}% ${candidate.percentage > 50 ? '(Passed)' : '(Failed)'}`
                   : 'N/A'}
               </div>
-              <div className='hidden lg:block text-center'>{candidate.invitedBy}</div>
+              {userDetails.userType == 'admin' && <div className='hidden lg:block text-center'>{candidate.invitedBy}</div>}
               <div className='hidden lg:block text-center'>
                 {candidate.ratings ? <Ratings rating={candidate.ratings} /> : 'N/A'}
               </div>
@@ -252,7 +252,7 @@ const AllCandidates: FC = () => {
                     ? `${candidate.percentage}% ${candidate.percentage > 50 ? '(Passed)' : '(Failed)'}`
                     : 'N/A'}
                 </div>
-                <div><strong>Invited By:</strong> {candidate.invitedBy}</div>
+                {userDetails.userType == 'admin' && <div><strong>Invited By:</strong> {candidate.invitedBy}</div>}
                 <div><strong>Ratings:</strong> {candidate.ratings ? <Ratings rating={candidate.ratings} /> : 'N/A'}</div>
               </div>
             </div>

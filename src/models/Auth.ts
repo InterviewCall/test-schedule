@@ -2,12 +2,19 @@ import { Document, Model, model, models, Schema } from 'mongoose';
 
 export interface IAuth extends Document {
     userEmail: string
+    userName: string
     userPassword: string
     userType: string
 }
 
 const authSchema = new Schema<IAuth>({
     userEmail: {
+        type: String,
+        required: true,
+        index: true
+    },
+
+    userName: {
         type: String,
         required: true,
         index: true

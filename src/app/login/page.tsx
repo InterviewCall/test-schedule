@@ -18,7 +18,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if(userDetails) {
-        router.replace('/');
+        router.replace(userDetails.userType == 'user' ? `/?user=${encodeURIComponent(userDetails.userName)}` : '/');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userDetails]);
@@ -33,8 +33,10 @@ export default function LoginPage() {
         });
 
         setIsLoading(false);
+        const user = response.data.data;
         setUser(response.data.data);
-        router.replace('/');
+        console.log('Encoded URL:', `/?user=${encodeURIComponent(user.userName)}`);
+        router.replace(user.userType == 'user' ? `/?user=${encodeURIComponent(user.userName)}` : '/');
     } catch (error) {
         const err = error as AxiosError<ErrorResponse>;
         const message = err.response?.data.message || 'Something went wrong';

@@ -1,14 +1,17 @@
 import scheduleDb from '@/configs/db';
 import { TEST_STATUS } from '@/enums/TestStatus';
+import Auth from '@/models/Auth';
 import ScheduleModel, { ISchedule } from '@/models/ScheduleModel';
 import { TestRequest } from '@/types';
 
 class TestScheduleRepository {
     private scheduleModel;
+    private authModel;
 
     constructor() {
         scheduleDb.connect();
         this.scheduleModel = ScheduleModel;
+        this.authModel = Auth;
     }
 
     async createTest(data: TestRequest, mailId: string): Promise<ISchedule> {
@@ -36,9 +39,51 @@ class TestScheduleRepository {
             startTime: 1,
             endTime: 1,
             testStatus: 1,
-            ratings: 1
+            ratings: 1,
         }).lean();
         return test;
+    }
+
+    async getAllCandidatesByInvitedBy(invitedBy: string): Promise<ISchedule[]> {
+        const user = await this.authModel.findOne({ userName: invitedBy });
+        if(!user) {
+            throw { message: 'No user found' };
+        }
+
+        const candidates = await this.scheduleModel.find({ invitedBy }, {
+            candidateEmail: 1,
+            candidateName: 1,
+            startTime: 1,
+            endTime: 1,
+            testStatus: 1,
+            ratings: 1,
+            percentage: 1,
+            reportCard: 1,
+            _id: 0
+        }).sort({ startTime: -1 }).lean();
+
+        return candidates;
+    }
+
+    async getAllCandidatesByInvitedByWithTestStatus(invitedBy: string, testStatus: TEST_STATUS): Promise<ISchedule[]> {
+        const user = await this.authModel.findOne({ userName: invitedBy });
+        if(!user) {
+            throw { message: 'No user found' };
+        }
+
+        const candidates = await this.scheduleModel.find({ invitedBy, testStatus }, {
+            candidateEmail: 1,
+            candidateName: 1,
+            startTime: 1,
+            endTime: 1,
+            testStatus: 1,
+            ratings: 1,
+            percentage: 1,
+            reportCard: 1,
+            _id: 0
+        }).sort({ startTime: -1 }).lean();
+
+        return candidates;
     }
 
     async getTest(email: string, flag?: boolean) {

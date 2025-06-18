@@ -45,7 +45,8 @@ const scheduleSchema = new Schema<ISchedule>({
 
     invitedBy: {
         type: String,
-        required: true
+        required: true,
+        index: true
     },
 
     testStatus: {

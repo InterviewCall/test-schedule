@@ -1,5 +1,6 @@
 import { TEST_STATUS } from '@/enums/TestStatus';
 import TestScheduleRepository from '@/repositories/TestScheduleRepository';
+import candidateQueryFactoryStrategy from '@/strategies/candidateQueryStrategyFactory';
 import { TestRequest } from '@/types';
 import { formatDate, formatTime, getMaxStartTime } from '@/utils';
 
@@ -54,6 +55,15 @@ class TestScheduleService {
         try {
             const tests = await this.testScheduleRepository.getAllTestCandidate();
             return tests;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getAllCandidates(invitedBy: string | null, testStatus: TEST_STATUS | null) {
+        try {
+            const getAllCandidatesStrategy = candidateQueryFactoryStrategy(this.testScheduleRepository, invitedBy, testStatus);
+            return await getAllCandidatesStrategy.getCandidateDetails();
         } catch (error) {
             throw error;
         }

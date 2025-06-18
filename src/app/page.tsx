@@ -288,32 +288,32 @@ export default function Home() {
 
   if (!userDetails)
     return (
-      <div className="bg-white h-[100dvh]">
+      <div className='bg-white h-[100dvh]'>
         <Loader />
       </div>
     );
 
   return (
-    <main className="w-full min-h-[100dvh] bg-white relative">
+    <main className='w-full min-h-[100dvh] bg-white relative'>
       {loading && <Loader />}
 
       <dialog
-        id="my_modal_2"
-        className="modal overflow-visible z-[998]"
+        id='my_modal_2'
+        className='modal overflow-visible z-[998]'
         ref={slotUpdateRef}
       >
-        <div className="modal-box bg-white overflow-visible">
-          <div className="overflow-visible">
-            <form className="flex flex-col gap-y-4" onSubmit={updateTimeSlot}>
+        <div className='modal-box bg-white overflow-visible'>
+          <div className='overflow-visible'>
+            <form className='flex flex-col gap-y-4' onSubmit={updateTimeSlot}>
               <input
-                id="updateEmail"
-                type="text"
-                name="updateEmail"
-                autoComplete="off"
+                id='updateEmail'
+                type='text'
+                name='updateEmail'
+                autoComplete='off'
                 value={updateEmail}
                 onChange={(e) => setUpdateEmail(e.target.value)}
-                className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                placeholder="Enter Email"
+                className='w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700'
+                placeholder='Enter Email'
                 required
               />
 
@@ -324,10 +324,10 @@ export default function Home() {
                   setUpdateEndTime(null); // Reset end time when start changes
                 }}
                 showTimeSelect
-                dateFormat="dd MMM yyyy, h:mm aa"
+                dateFormat='dd MMM yyyy, h:mm aa'
                 minDate={new Date()}
-                placeholderText="Select Start Date & Time"
-                className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                placeholderText='Select Start Date & Time'
+                className='w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700'
               />
 
               <DatePicker
@@ -336,13 +336,13 @@ export default function Home() {
                   setUpdateEndTime(date);
                 }}
                 showTimeSelect
-                dateFormat="dd MMM yyyy, h:mm aa"
+                dateFormat='dd MMM yyyy, h:mm aa'
                 minDate={updateStartTime || new Date()}
                 minTime={userDetails.userType == 'user' ? updateStartTime ? addMinutes(updateStartTime, 60) : undefined : undefined}
                 maxTime={userDetails.userType == 'user' ? updateStartTime ? addMinutes(updateStartTime, 60) : undefined : undefined}
                 disabled={!updateStartTime}
-                placeholderText="Select End Date & Time"
-                className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                placeholderText='Select End Date & Time'
+                className='w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700'
               />
               {/* if there is a button in form, it will close the modal */}
 
@@ -350,11 +350,11 @@ export default function Home() {
                   <Select
                     options={advisorOptions}
                     value={updateAdvisor}
-                    placeholder="Select Advisor Name"
+                    placeholder='Select Advisor Name'
                     onChange={(newValue) =>
                       setUpdateAdvisor(newValue as OptionType)
                     }
-                    className="text-black"
+                    className='text-black'
                     isSearchable
                     styles={{
                       control: (provided) => ({
@@ -366,11 +366,11 @@ export default function Home() {
                     }}
                  />)}
                 
-              <button className="btn btn-success" type="submit">
+              <button className='btn btn-success' type='submit'>
                 Update
               </button>
               <button
-                className="btn btn-secondary"
+                className='btn btn-secondary'
                 onClick={(e) => {
                   e.preventDefault();
                   slotUpdateRef.current.close();
@@ -382,60 +382,61 @@ export default function Home() {
           </div>
         </div>
       </dialog>
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold text-gray-800 pt-8 mb-8">
+      <div className='max-w-6xl mx-auto'>
+        <h1 className='text-6xl font-bold text-gray-800 text-center py-8'>Welcome Back {userDetails.userName.split(' ')[0]}</h1>
+        <h1 className='text-4xl font-bold text-gray-800 pt-8 mb-8 text-center'>
           Test Management
         </h1>
 
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">
+        <div className='bg-white rounded-lg shadow-md p-6 mb-8'>
+          <h2 className='text-xl font-semibold text-gray-700 mb-4'>
             Create New Test
           </h2>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
+          <form onSubmit={handleSubmit} className='space-y-6'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+              <div className='space-y-2'>
                 <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-gray-700"
+                  htmlFor='name'
+                  className='block text-sm font-medium text-gray-700'
                 >
                   Name
                 </label>
                 <input
-                  id="candidateName"
-                  type="text"
-                  name="candidateName"
-                  autoComplete="off"
+                  id='candidateName'
+                  type='text'
+                  name='candidateName'
+                  autoComplete='off'
                   value={formData.candidateName}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                  placeholder="Enter Name"
+                  className='w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700'
+                  placeholder='Enter Name'
                   required
                 />
               </div>
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 <label
-                  htmlFor="age"
-                  className="block text-sm font-medium text-gray-700"
+                  htmlFor='age'
+                  className='block text-sm font-medium text-gray-700'
                 >
                   Email
                 </label>
                 <input
-                  id="candidateEmail"
-                  type="text"
-                  name="candidateEmail"
-                  autoComplete="off"
+                  id='candidateEmail'
+                  type='text'
+                  name='candidateEmail'
+                  autoComplete='off'
                   value={formData.candidateEmail}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                  placeholder="Enter Email"
+                  className='w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700'
+                  placeholder='Enter Email'
                   required
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 <label
-                  htmlFor="address"
-                  className="block text-sm font-medium text-gray-700"
+                  htmlFor='address'
+                  className='block text-sm font-medium text-gray-700'
                 >
                   Select Time Slot
                 </label>
@@ -447,17 +448,17 @@ export default function Home() {
                     setEndTime(null); // Reset end time when start changes
                   }}
                   showTimeSelect
-                  dateFormat="dd MMM yyyy, h:mm aa"
+                  dateFormat='dd MMM yyyy, h:mm aa'
                   minDate={new Date()}
-                  placeholderText="Select Start Date & Time"
-                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                  placeholderText='Select Start Date & Time'
+                  className='w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700'
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 <label
-                  htmlFor="address"
-                  className="text-sm block font-medium text-gray-700 md:opacity-0 max-md:hidden"
+                  htmlFor='address'
+                  className='text-sm block font-medium text-gray-700 md:opacity-0 max-md:hidden'
                 >
                   Select Time Slot
                 </label>
@@ -471,19 +472,19 @@ export default function Home() {
                     setEndTime(date);
                   }}
                   showTimeSelect
-                  dateFormat="dd MMM yyyy, h:mm aa"
+                  dateFormat='dd MMM yyyy, h:mm aa'
                   minDate={startTime || new Date()}
                   minTime={userDetails.userType == 'user' ? startTime ? addMinutes(startTime, 60) : undefined : undefined}
                   maxTime={userDetails.userType == 'user' ? startTime ? addMinutes(startTime, 60) : undefined: undefined}
                   disabled={!startTime}
-                  placeholderText="Select End Date & Time"
-                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                  placeholderText='Select End Date & Time'
+                  className='w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700'
                 />
               </div>
-              <div className="space-y-2 md:col-span-2">
+              <div className='space-y-2 md:col-span-2'>
                 <label
-                  htmlFor="occupation"
-                  className="block text-sm font-medium text-gray-700"
+                  htmlFor='occupation'
+                  className='block text-sm font-medium text-gray-700'
                 >
                   Invited By
                 </label>
@@ -491,11 +492,11 @@ export default function Home() {
                 <Select
                   options={advisorOptions}
                   value={selectAdvisor}
-                  placeholder="Select Advisor Name"
+                  placeholder='Select Advisor Name'
                   onChange={(newValue) =>
                     setSelecteAdvisor(newValue as OptionType)
                   }
-                  className="text-black"
+                  className='text-black'
                   isSearchable
                   styles={{
                     control: (provided) => ({
@@ -509,17 +510,17 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="flex gap-x-6">
+            <div className='flex gap-x-6'>
               <button
-                type="submit"
-                className="w-full md:w-auto px-6 py-2 bg-blue-600 cursor-pointer text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                type='submit'
+                className='w-full md:w-auto px-6 py-2 bg-blue-600 cursor-pointer text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors'
               >
                 Create Test
               </button>
 
               <button
                 onClick={handleUpdate}
-                className="w-full md:w-auto px-6 py-2 bg-blue-600 cursor-pointer text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                className='w-full md:w-auto px-6 py-2 bg-blue-600 cursor-pointer text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors'
               >
                 Update Time Slot
               </button>
@@ -527,10 +528,10 @@ export default function Home() {
           </form>
         </div>
 
-        <div className="bg-white rounded-lg text-black">
-          <div className="max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-100">
-              <div className="h-[200px] flex justify-center items-center">
-                <Link className="btn btn-accent text-white" href="/tests">
+        <div className='bg-white rounded-lg text-black'>
+          <div className='max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-100'>
+              <div className='h-[200px] flex justify-center items-center'>
+                <Link className='btn btn-accent text-white' href={userDetails.userType == 'user' ? `/tests?user=${userDetails.userName}` : '/tests'}>
                   Show All Tests
                 </Link>
               </div>

@@ -7,9 +7,9 @@ class AuthService {
         this.authRepository = authRepository;
     }
 
-    async createUser(userEmail: string, password: string, adminEmail: string) {
+    async createUser(userEmail: string, userName: string, password: string, adminEmail: string) {
         try {
-            const user = await this.authRepository.createUser(userEmail, password, adminEmail);
+            const user = await this.authRepository.createUser(userEmail, userName, password, adminEmail);
             return user;
         } catch (error) {
             throw error;

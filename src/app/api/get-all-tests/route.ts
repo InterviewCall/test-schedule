@@ -16,12 +16,21 @@ export async function GET(req: NextRequest) {
             data: response,
             error: {}
         }, { status: 200 });
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+        let message = 'Something went wrong';
+        let statusCode = 500;
+
+        if (error.message) {
+            message = error.message;
+            statusCode = 404;
+        }
+
         return NextResponse.json({
             success: false,
-            message: 'Something went wrong',
+            message,
             data: {},
             error
-        }, { status: 500 });
+        }, { status: statusCode });
     }
 }

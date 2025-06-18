@@ -26,7 +26,7 @@ const StatusFilter: FC<Props> = ({ updateTests, setLoading }) => {
 
   useEffect(() => {
     if(!userDetails) {
-      router.replace('/');
+      router.replace('/login');
       return;
     }
     const status = searchParams.get('status');
@@ -38,10 +38,17 @@ const StatusFilter: FC<Props> = ({ updateTests, setLoading }) => {
   async function fetchTests(testStatus: string | null) {
     try {
         setLoading(true);
-        const response: AxiosResponse<TestResponse> = await axios.get('/api/get-all-tests-by-status', {
-            params: {
-                status: testStatus
-            }
+
+        const params: Record<string, string | null> = {
+          'status': testStatus,
+        };
+
+        if(userDetails.userType == 'user') {
+          params['invited-by'] = userDetails.userName;
+        }
+
+        const response: AxiosResponse<TestResponse> = await axios.get('/api/get-all-tests', {
+            params
         });
         updateTests(response.data.data);
         setLoading(false);
@@ -80,7 +87,7 @@ const StatusFilter: FC<Props> = ({ updateTests, setLoading }) => {
               <li key={status}>
                 <Link
                   className="w-full text-left flex items-center justify-between px-4 py-2 hover:bg-pink-400 hover:text-white"
-                  href={`?status=${status}`}
+                  href={userDetails.userType == 'user' ? `?user=${encodeURIComponent(userDetails.userName)}&status=${status}` : `?status=${status}`}
                   onClick={() => setOpen(false)}
                 >
                   <span>{status}</span>

@@ -46,7 +46,6 @@ export const userDashBoard = [
   'Status',
   'Report',
   'Percentage',
-  'Invited By',
   'Ratings',
 ];
 

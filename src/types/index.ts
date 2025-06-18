@@ -52,6 +52,7 @@ export interface TestResponse {
 export interface User {
     _id: string
     userEmail: string
+    userName: string
     userType: string
 }
 

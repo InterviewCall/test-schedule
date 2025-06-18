@@ -4,8 +4,8 @@ import authService from '@/lib/authServiceInstance';
 
 export async function POST(req: NextRequest) {
     try {
-        const { userEmail, password, adminEmail } = await req.json();
-        const user = await authService.createUser(userEmail, password, adminEmail);
+        const { userEmail, userName, password, adminEmail } = await req.json();
+        const user = await authService.createUser(userEmail, userName, password, adminEmail);
 
         return NextResponse.json({
             success: true,
