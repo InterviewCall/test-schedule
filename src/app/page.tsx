@@ -317,7 +317,7 @@ export default function Home() {
                 required
               />
 
-              <DatePicker
+              {/* <DatePicker
                 selected={updateStartTime}
                 onChange={(date) => {
                   setUpdateStartTime(date);
@@ -328,6 +328,19 @@ export default function Home() {
                 minDate={new Date()}
                 placeholderText='Select Start Date & Time'
                 className='w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700'
+              /> */}
+
+              <DatePicker
+                selected={updateStartTime}
+                onChange={(date) => {
+                  setUpdateStartTime(date);
+                  setUpdateEndTime(date ? addMinutes(date, 60) : null);
+                }}
+                showTimeSelect
+                dateFormat="dd MMM yyyy, h:mm aa"
+                minDate={new Date()}
+                placeholderText="Select Start Date & Time"
+                className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
               />
 
               <DatePicker
@@ -340,7 +353,7 @@ export default function Home() {
                 minDate={updateStartTime || new Date()}
                 minTime={userDetails.userType == 'user' ? updateStartTime ? addMinutes(updateStartTime, 60) : undefined : undefined}
                 maxTime={userDetails.userType == 'user' ? updateStartTime ? addMinutes(updateStartTime, 60) : undefined : undefined}
-                disabled={!updateStartTime}
+                disabled={true}
                 placeholderText='Select End Date & Time'
                 className='w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700'
               />
@@ -440,7 +453,7 @@ export default function Home() {
                 >
                   Select Time Slot
                 </label>
-
+{/* 
                 <DatePicker
                   selected={startTime}
                   onChange={(date) => {
@@ -452,6 +465,20 @@ export default function Home() {
                   minDate={new Date()}
                   placeholderText='Select Start Date & Time'
                   className='w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700'
+                /> */}
+
+                <DatePicker
+                  selected={startTime}
+                  onChange={(date) => {
+                    setStartTime(date);
+                    setEndTime(date ? addMinutes(date, 60) : null);
+                  }}
+                  showTimeSelect
+                  timeIntervals={30}
+                  dateFormat="dd MMM yyyy, h:mm aa"
+                  minDate={new Date()}
+                  placeholderText="Select Start Date & Time"
+                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
                 />
               </div>
 
@@ -476,7 +503,7 @@ export default function Home() {
                   minDate={startTime || new Date()}
                   minTime={userDetails.userType == 'user' ? startTime ? addMinutes(startTime, 60) : undefined : undefined}
                   maxTime={userDetails.userType == 'user' ? startTime ? addMinutes(startTime, 60) : undefined: undefined}
-                  disabled={!startTime}
+                  disabled={true}
                   placeholderText='Select End Date & Time'
                   className='w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700'
                 />
