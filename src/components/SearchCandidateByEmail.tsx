@@ -1,9 +1,10 @@
-import { Test, TestResponse } from "@/types";
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { Search } from "lucide-react";
-import { ChangeEvent, useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { ErrorResponse } from "resend";
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { Search } from 'lucide-react';
+import { ChangeEvent, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { ErrorResponse } from 'resend';
+
+import { Test, TestResponse } from '@/types';
 interface Props {
     updateTests: (tests: Test[]) => void
     setLoading: (state: boolean) => void
@@ -17,10 +18,10 @@ export default function SearchCandidateByEmail({ updateTests, setLoading }: Prop
         try {
             setLoading(true);
             const response: AxiosResponse<TestResponse> = await axios.get(`/api/get-candidate-by-email?email=${email}`);
-            console.log(response)
+            console.log(response);
             updateTests(response.data.data);
             if(email.length == 0){
-                toast.error("Please enter a email ")
+                toast.error('Please enter a email ');
             }
             // if(email.length){
             // }else{
@@ -56,6 +57,7 @@ export default function SearchCandidateByEmail({ updateTests, setLoading }: Prop
                 setSearch(false);
             }
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
 
     return (
@@ -68,7 +70,7 @@ export default function SearchCandidateByEmail({ updateTests, setLoading }: Prop
                 onChange={handleChange}
                 className="bg-transparent text-black placeholder-gray-500 placeholder-opacity-100"
             />
-            <button className=" flex rounded-full items-center gap-x-2 h-full px-4 bg-green-300 text-black ml-2 hover:bg-green-400 transition-colors hover:cursor-pointer" onClick={() => { setSearch(true) }}>
+            <button className=" flex rounded-full items-center gap-x-2 h-full px-4 bg-green-300 text-black ml-2 hover:bg-green-400 transition-colors hover:cursor-pointer" onClick={() => { setSearch(true); }}>
                 <Search size={18} />
             </button>
         </label>
