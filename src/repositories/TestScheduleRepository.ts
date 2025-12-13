@@ -210,7 +210,7 @@ class TestScheduleRepository {
         const candidates = await this.scheduleModel.find({
             candidateEmail: {
                 $regex: `^${email}`,
-                $options: "i",
+                $options: 'i',
             },
         });
         return candidates;

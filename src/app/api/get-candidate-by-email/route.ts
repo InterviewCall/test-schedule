@@ -1,10 +1,11 @@
-import { testScheduleService } from "@/lib/testScheduleServiceIntance";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
+
+import { testScheduleService } from '@/lib/testScheduleServiceIntance';
 
 export async function GET(req: NextRequest) {
     try {
         const { searchParams } = new URL(req.url);
-        const email = searchParams.get("email");
+        const email = searchParams.get('email');
         const response = await testScheduleService.getCandidateByEmail(email as string);
         return NextResponse.json({
             success: true,
