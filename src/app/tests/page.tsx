@@ -12,6 +12,7 @@ import StatusFilter from '@/components/StatusFilter';
 import { UserContext } from '@/contexts/UserContext';
 import { EmailStatus, ErrorResponse, Test, TestResponse } from '@/types';
 import { adminDashBoard, formatDate, formatTime, userDashBoard } from '@/utils';
+import SearchCandidateByEmail from '@/components/SearchCandidateByEmail';
 
 const AllCandidates: FC = () => {
   const [tests, setTests] = useState<Test[]>([]);
@@ -144,9 +145,9 @@ const AllCandidates: FC = () => {
         </div>
       </dialog>
 
-      <div className='flex justify-between'>
+      <div className='flex justify-between items-center'>
         {userDetails && userDetails.userType == 'admin' && <button className='btn btn-error text-white m-6' onClick={deleteCandidate}>Delete Candidate</button>}
-
+        <SearchCandidateByEmail updateTests={updateTests} setLoading={setLoading} />
         <StatusFilter updateTests={updateTests} setLoading={setLoading} />
       </div>
 
@@ -160,7 +161,7 @@ const AllCandidates: FC = () => {
       </div>
 
       <div className='divide-y lg:max-h-[75dvh] max-h-[85dvh] overflow-y-auto divide-gray-200 shadow overflow-hidden rounded-b-md'>
-        {tests.length > 0 ? (
+        {tests?.length > 0 ? (
           tests.map((candidate, index) => (
             <div
               key={index}

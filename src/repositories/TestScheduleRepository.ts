@@ -205,6 +205,16 @@ class TestScheduleRepository {
             candidateEmail: { $in: candidateEmails }
         });
     }
+
+    async getCandidatesByEmail(email: string) {
+        const candidates = await this.scheduleModel.find({
+            candidateEmail: {
+                $regex: `^${email}`,
+                $options: "i",
+            },
+        });
+        return candidates;
+    }
 }
 
 export default TestScheduleRepository;
