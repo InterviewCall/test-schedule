@@ -166,6 +166,15 @@ class TestScheduleService {
             throw error;
         }
     }
+
+    async getCandidateByEmail(email: string) {
+        try{
+            const candidateList = await this.testScheduleRepository.getCandidatesByEmail(email);
+            return candidateList;
+        }catch (error) {
+            throw error;
+        }
+    }
 }
 
 export default TestScheduleService;
