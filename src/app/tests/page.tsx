@@ -8,11 +8,11 @@ import toast from 'react-hot-toast';
 
 import Loader from '@/components/Loader';
 import Ratings from '@/components/Ratings';
+import SearchCandidateByEmail from '@/components/SearchCandidateByEmail';
 import StatusFilter from '@/components/StatusFilter';
 import { UserContext } from '@/contexts/UserContext';
 import { EmailStatus, ErrorResponse, Test, TestResponse } from '@/types';
 import { adminDashBoard, formatDate, formatTime, userDashBoard } from '@/utils';
-import SearchCandidateByEmail from '@/components/SearchCandidateByEmail';
 
 const AllCandidates: FC = () => {
   const [tests, setTests] = useState<Test[]>([]);
