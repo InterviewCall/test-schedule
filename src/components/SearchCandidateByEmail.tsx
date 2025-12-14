@@ -1,5 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { Search } from 'lucide-react';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { ChangeEvent, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { ErrorResponse } from 'resend';
@@ -12,29 +14,25 @@ interface Props {
 
 export default function SearchCandidateByEmail({ updateTests, setLoading }: Props) {
     const [email, setEmail] = useState<string>('');
-    const [search, setSearch] = useState(false);
+    const searchParams = useSearchParams();
 
     async function fetchTests(email: string) {
         try {
             setLoading(true);
-            const response: AxiosResponse<TestResponse> = await axios.get(`/api/get-candidate-by-email?email=${email}`);
+            const params: Record<string, string> = {
+                'email': email
+            };
+            const response: AxiosResponse<TestResponse> = await axios.get('/api/get-candidate-by-email', {
+                params
+            });
             console.log(response);
             updateTests(response.data.data);
-            if(email.length == 0){
-                toast.error('Please enter a email ');
-            }
-            // if(email.length){
-            // }else{
-            //     const response: AxiosResponse<TestResponse> = await axios.get('/api/get-all-tests');
-            //     updateTests(response.data.data);
-            // }
         } catch (error) {
             const err = error as AxiosError<ErrorResponse>;
             const message = err.response?.data.message || 'Something went wrong!';
             toast.error(message);
         } finally {
             setLoading(false);
-            setSearch(false);
         }
     }
 
@@ -48,17 +46,22 @@ export default function SearchCandidateByEmail({ updateTests, setLoading }: Prop
 
 
     useEffect(() => {
-        if (search) {
-            if(isValidEmail(email)){
-                fetchTests(email);
-            }else{
-                toast.error('Please enter a valid email address.');
-                setLoading(false);
-                setSearch(false);
-            }
+        const email = searchParams.get('email');
+
+        if(!email) {
+            setEmail('');
+            return;
         }
+
+        if(!isValidEmail(email)) {
+            toast.error('Please enter a valid email address');
+            return;
+        }
+
+        // setEmail(email);
+        fetchTests(email);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [search]);
+    }, [searchParams]);
 
     return (
         <label className="input rounded-full input-bordered bg-white text-black border-gray-300 pr-0 pl-4 w-[30%] h-12 flex items-center">
@@ -70,9 +73,12 @@ export default function SearchCandidateByEmail({ updateTests, setLoading }: Prop
                 onChange={handleChange}
                 className="bg-transparent text-black placeholder-gray-500 placeholder-opacity-100"
             />
-            <button className=" flex rounded-full items-center gap-x-2 h-full px-4 bg-green-300 text-black ml-2 hover:bg-green-400 transition-colors hover:cursor-pointer" onClick={() => { setSearch(true); }}>
+            <Link 
+                className=" flex rounded-full items-center gap-x-2 h-full px-4 bg-green-300 text-black ml-2 hover:bg-green-400 transition-colors hover:cursor-pointer" 
+                href={`?email=${encodeURIComponent(email)}`}
+            >
                 <Search size={18} />
-            </button>
+            </Link>
         </label>
     );
 }

@@ -29,6 +29,8 @@ const StatusFilter: FC<Props> = ({ updateTests, setLoading }) => {
       router.replace('/login');
       return;
     }
+    const email = searchParams.get('email');
+    if(email) return;
     const status = searchParams.get('status');
     setTestStatus(status);
     fetchTests(status);

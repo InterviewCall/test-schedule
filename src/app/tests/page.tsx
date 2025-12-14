@@ -147,7 +147,7 @@ const AllCandidates: FC = () => {
 
       <div className='flex justify-between items-center'>
         {userDetails && userDetails.userType == 'admin' && <button className='btn btn-error text-white m-6' onClick={deleteCandidate}>Delete Candidate</button>}
-        <SearchCandidateByEmail updateTests={updateTests} setLoading={setLoading} />
+        {userDetails && userDetails.userType == 'admin' && <SearchCandidateByEmail updateTests={updateTests} setLoading={setLoading} />}
         <StatusFilter updateTests={updateTests} setLoading={setLoading} />
       </div>
 
