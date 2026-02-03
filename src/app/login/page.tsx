@@ -35,7 +35,6 @@ export default function LoginPage() {
         setIsLoading(false);
         const user = response.data.data;
         setUser(response.data.data);
-        console.log('Encoded URL:', `/?user=${encodeURIComponent(user.userName)}`);
         router.replace(user.userType == 'user' ? `/?user=${encodeURIComponent(user.userName)}` : '/');
     } catch (error) {
         const err = error as AxiosError<ErrorResponse>;

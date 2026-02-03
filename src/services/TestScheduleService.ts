@@ -13,6 +13,26 @@ class TestScheduleService {
         this.testScheduleRepository = testScheduleRepository;
     }
 
+    async getTaskCount(invitedBy: string | null) {
+        try{
+            if( !invitedBy ) throw new Error('InvitedBy parameter is required to get task count');
+
+            const records = await this.testScheduleRepository.getTaskCount(invitedBy);
+            const totalTasks = records.reduce((acc, curr) => acc + curr.count, 0);
+            const taskCounts = records.reduce((acc, record) => {
+                acc[record._id] = {
+                    count: record.count,
+                    percentage: Number(((record.count / totalTasks) * 100).toFixed(2)),
+                };
+                return acc;
+                }, {} as Record<string, { count: number; percentage: number }>);
+            const response = { totalTasks, taskCounts };
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async createTest(data: TestRequest) {
         try {
             const date = formatDate(data.startTime);

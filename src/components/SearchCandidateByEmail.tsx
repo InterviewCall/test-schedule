@@ -25,7 +25,6 @@ export default function SearchCandidateByEmail({ updateTests, setLoading }: Prop
             const response: AxiosResponse<TestResponse> = await axios.get('/api/get-candidate-by-email', {
                 params
             });
-            console.log(response);
             updateTests(response.data.data);
         } catch (error) {
             const err = error as AxiosError<ErrorResponse>;
