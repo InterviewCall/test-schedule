@@ -22,8 +22,8 @@ export function TestEmailPlainText({
   If you have any questions, feel free to reach out to us.
   
   Best regards,  
-  Prithviraj Paul  
-  9831649077
+  Setu Rajeev Jain  
+  7303013706
     `;
   }
   
