@@ -2,7 +2,6 @@
 
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { Check, ChevronDown } from 'lucide-react';
-import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FC, useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -19,6 +18,7 @@ interface Props {
 
 const StatusFilter: FC<Props> = ({ updateTests, setLoading }) => {
   const [open, setOpen] = useState(false);
+  // const [taskCount, setTaskCount] = useState<number | undefined>(undefined);
   const searchParams = useSearchParams();
   const [testStatus, setTestStatus] = useState<string | null>(null);
   const { userDetails } = useContext(UserContext);
@@ -33,35 +33,88 @@ const StatusFilter: FC<Props> = ({ updateTests, setLoading }) => {
     if(email) return;
     const status = searchParams.get('status');
     setTestStatus(status);
-    fetchTests(status);
+    fetchTests();
+    // if(searchParams.get('bda')){
+    //   fetchTaskCount();
+    // }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, userDetails]);
 
-  async function fetchTests(testStatus: string | null) {
-    try {
-        setLoading(true);
+   
+  // async function fetchTests(testStatus: string | null) {
+  //   try {
+  //       setLoading(true);
 
-        const params: Record<string, string | null> = {
-          'status': testStatus,
-        };
+  //       const params: Record<string, string | null> = {
+  //         'status': testStatus,
+  //       };
 
-        if(userDetails.userType == 'user') {
-          params['invited-by'] = userDetails.userName;
-        }
+  //       if(userDetails.userType == 'user') {
+  //         params['invited-by'] = userDetails.userName;
+  //       }
 
-        const response: AxiosResponse<TestResponse> = await axios.get('/api/get-all-tests', {
-            params
-        });
-        updateTests(response.data.data);
-        setLoading(false);
-    } catch (error) {
-        const err = error as AxiosError<ErrorResponse>;
-        const message = err.response?.data.message || 'Something went wrong!';
-        toast.error(message);
-    } finally {
-        setLoading(false);
+  //       const response: AxiosResponse<TestResponse> = await axios.get('/api/get-all-tests', {
+  //           params
+  //       });
+  //       updateTests(response.data.data);
+  //       setLoading(false);
+  //   } catch (error) {
+  //       const err = error as AxiosError<ErrorResponse>;
+  //       const message = err.response?.data.message || 'Something went wrong!';
+  //       toast.error(message);
+  //   } finally {
+  //       setLoading(false);
+  //   }
+  // }
+
+ 
+  async function fetchTests() {
+      try {
+          setLoading(true);
+          const urlParams = new URLSearchParams(searchParams.toString());
+          const bda = urlParams.get('bda');
+          const status = urlParams.get('status');
+          const params: Record<string, string | null> = {
+            
+          };
+  
+          if(userDetails.userType == 'user') {
+            params['invited-by'] = userDetails.userName;
+          }
+  
+          if(bda) {
+            params['invited-by'] = bda;
+          }
+  
+          if(status) {
+            params['status'] = status;
+          }
+  
+          const response: AxiosResponse<TestResponse> = await axios.get('/api/get-all-tests', {
+              params
+          });
+          updateTests(response.data.data);
+          setLoading(false);
+      } catch (error) {
+          const err = error as AxiosError<ErrorResponse>;
+          const message = err.response?.data.message || 'Something went wrong!';
+          toast.error(message);
+      } finally {
+          setLoading(false);
+      }
     }
-  }
+  
+    function updateQueryParams({key, value}: {key: string, value: string}){
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(key, value);
+      router.push(`?${params.toString()}`);
+    }
+
+    function removeQueryParams({key}: {key: string}){
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete(key);
+      router.push(`?${params.toString()}`);
+    }
 
   return (
     <div className="relative flex justify-end p-6">
@@ -77,26 +130,29 @@ const StatusFilter: FC<Props> = ({ updateTests, setLoading }) => {
         <div className="absolute z-10 mt-10 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
           <ul className="py-1 text-sm text-gray-700">
             <li>
-              <Link
+              <div
                 className="w-full text-left flex items-center justify-between px-4 py-2 hover:bg-pink-400 hover:text-white"
-                href='/tests'
-                onClick={() => setOpen(false)}
+                // href='/tests'
+                onClick={() => { removeQueryParams({key: 'status'}); setOpen(false); }}
               >
                 All Statuses
-              </Link>
+              </div>
             </li>
             {statusOptions.map((status) => (
               <li key={status}>
-                <Link
+                <div
                   className="w-full text-left flex items-center justify-between px-4 py-2 hover:bg-pink-400 hover:text-white"
-                  href={userDetails.userType == 'user' ? `?user=${encodeURIComponent(userDetails.userName)}&status=${status}` : `?status=${status}`}
-                  onClick={() => setOpen(false)}
+                  // href={userDetails.userType == 'user' ? `?user=${encodeURIComponent(userDetails.userName)}&status=${status}` : `?status=${status}`}
+                  onClick={() => {
+                    updateQueryParams({key: 'status', value: status});
+                    setOpen(false);
+                  }}
                 >
                   <span>{status}</span>
                   {testStatus === status && (
                     <Check className="w-4 h-4 text-green-500" />
                   )}
-                </Link>
+                </div>
               </li>
             ))}
           </ul>

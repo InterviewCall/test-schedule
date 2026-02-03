@@ -6,6 +6,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
+import CircularProgressBar from '@/components/CircularProgressBar';
+import InvitationFilter from '@/components/InvitationFilter';
 import Loader from '@/components/Loader';
 import Ratings from '@/components/Ratings';
 import SearchCandidateByEmail from '@/components/SearchCandidateByEmail';
@@ -14,6 +16,7 @@ import { UserContext } from '@/contexts/UserContext';
 import { EmailStatus, ErrorResponse, Test, TestResponse } from '@/types';
 import { adminDashBoard, formatDate, formatTime, userDashBoard } from '@/utils';
 
+type FetchTaskCountResponseType = {totalTasks: number, taskCounts: Record<string, { count: number; percentage: number }>}
 const AllCandidates: FC = () => {
   const [tests, setTests] = useState<Test[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,8 +24,10 @@ const AllCandidates: FC = () => {
   const [status, setStatus] = useState('');
   const [emails, setEmails] = useState<string[]>([]);
   const [header, setHeader] = useState<string[]>([]);
+  const [tasksData, setTasksData] = useState<FetchTaskCountResponseType | undefined>(undefined);
   const { userDetails } = useContext(UserContext);
   const emailRef = useRef<HTMLDialogElement>(null!);
+  const tasksRef = useRef<HTMLDialogElement>(null!);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -32,8 +37,8 @@ const AllCandidates: FC = () => {
       router.replace('/login');
       return;
     }
-    setHeader(userDetails.userType === 'admin' ? adminDashBoard : userDashBoard);
-  }, [userDetails, router]);
+    setHeader(userDetails.userType === 'admin' ? searchParams.get('bda') ? adminDashBoard.filter((tab)=> tab != 'Invited By') : adminDashBoard : userDashBoard);
+  }, [userDetails, router, searchParams]);
 
   function updateTests(tests: Test[]) {
     setTests(tests);
@@ -109,6 +114,27 @@ const AllCandidates: FC = () => {
     }
   }
 
+   async function fetchTaskCount() {
+     
+     try{
+      setLoading(true);
+      const params: Record<string, string | null> = {
+        bda: searchParams.get('bda')
+      };
+      const response = await axios.get('/api/get-tasks-count', {
+        params
+      });
+      setTasksData(response.data.data);
+    } catch (error) {
+        const err = error as AxiosError<ErrorResponse>;
+        const message = err.response?.data.message || 'Something went wrong!';
+        toast.error(message);
+    } finally {
+        setLoading(false);
+    }
+  }
+
+
   if (!userDetails)
     return (
       <div className="bg-white h-[100dvh]">
@@ -145,14 +171,71 @@ const AllCandidates: FC = () => {
         </div>
       </dialog>
 
+      <dialog ref={tasksRef} className='modal'>
+        <div className='modal-box rounded-xl shadow-lg bg-white'>
+          <h3 className='font-bold text-xl'>{'Overall Progress '}</h3>
+          <div className="flex items-center space-x-3  my-2">
+                <div className="font-semibold text-lg ">{'Total Tests scheduled = '}</div>
+                <div>{tasksData?.totalTasks || 0}</div>
+              </div>
+          {tasksData && 
+           <div className="py-1 divide-x text-gray-700 grid grid-cols-2">
+            {[
+              { label: 'Submitted', key: 'Submitted', color: '#22c55e' },
+              { label: 'Expired', key: 'Expired', color: '#ef4444' },
+            ].map(({ label, key, color }) => (
+              <div
+                key={key}
+                className="flex flex-col justify-center items-center py-3 px-3.5"
+              >
+                <div className="font-semibold text-lg mb-3">
+                  <span>{label}</span>
+                  <span className='mx-2'>=</span>
+                  <span className='my-2'>{tasksData.taskCounts[key]?.count ?? 0}</span>
+                </div>
+                {/* <div>{tasksData.taskCounts[key]?.percentage ?? 0}%</div> */}
+                {/* <div className="w-full h-1 rounded-full bg-gray-300 overflow-hidden mt-4">
+                  <div
+                      className="h-full bg-green-500 transition-all duration-300"
+                      style={{ width: `${Math.min(tasksData.taskCounts[key]?.percentage || 0, 100)}%` }}
+                    />
+                </div> */}
+                <CircularProgressBar percentage={tasksData.taskCounts[key]?.percentage || 0} color={color} />
+              </div>
+            ))}
+            
+          </div>
+          }
+          {/* {status && <p>Status: <span className={clsx(status == 'delivered' ? 'text-green-500' : status == 'bounced' ? 'text-red-500' : 'text-primary')}>{status}</span></p>} */}
+          <div className='modal-action'>
+            <button
+              className='btn bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded'
+              onClick={(e) => {
+                e.preventDefault();
+                tasksRef.current.close();
+                setStatus('');
+              }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </dialog>
+
       <div className='flex justify-between items-center'>
         {userDetails && userDetails.userType == 'admin' && <button className='btn btn-error text-white m-6' onClick={deleteCandidate}>Delete Candidate</button>}
         {userDetails && userDetails.userType == 'admin' && <SearchCandidateByEmail updateTests={updateTests} setLoading={setLoading} />}
+        {userDetails && userDetails.userType == 'admin' && <InvitationFilter updateTests={updateTests} setLoading={setLoading} />}
+        {userDetails && userDetails.userType == 'admin' && searchParams.get('bda') &&
+          <button onClick={() => {
+                  fetchTaskCount();
+                  tasksRef.current.showModal();
+                }} className='text-center btn btn-info font-bold  rounded-xl'>Show Progress</button>}
         <StatusFilter updateTests={updateTests} setLoading={setLoading} />
       </div>
 
       {/* Desktop View */}
-      <div className={clsx(userDetails && userDetails.userType == 'admin' ? 'lg:grid grid-cols-10' : 'lg:grid grid-cols-8', 'hidden sticky bg-indigo-600 text-white shadow-md rounded-t-md font-semibold text-center')}>
+      <div className={clsx(userDetails && userDetails.userType == 'admin' ? searchParams.get('bda') ? 'lg:grid grid-cols-9' : 'lg:grid grid-cols-10' : 'lg:grid grid-cols-8', 'hidden sticky bg-indigo-600 text-white shadow-md rounded-t-md font-semibold text-center')}>
         {header.length > 0 && header.map((header, idx) => (
           <div key={idx} className='py-3 px-2 border-b'>
             {header}
@@ -165,7 +248,7 @@ const AllCandidates: FC = () => {
           tests.map((candidate, index) => (
             <div
               key={index}
-              className={clsx(userDetails.userType == 'admin' ? 'lg:grid-cols-10' : 'lg:grid-cols-8',
+              className={clsx(userDetails.userType == 'admin' ? searchParams.get('bda') ? 'lg:grid-cols-9' :  'lg:grid-cols-10' : 'lg:grid-cols-8',
                 'grid grid-cols-1 text-sm bg-white transition py-3 hover:bg-indigo-200',
                 index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
               )}
@@ -213,7 +296,7 @@ const AllCandidates: FC = () => {
                   ? `${candidate.percentage}% ${candidate.percentage > 50 ? '(Passed)' : '(Failed)'}`
                   : 'N/A'}
               </div>
-              {userDetails.userType == 'admin' && <div className='hidden lg:block text-center'>{candidate.invitedBy}</div>}
+              {userDetails.userType == 'admin' && !searchParams.get('bda') && <div className='hidden lg:block text-center'>{candidate.invitedBy}</div>}
               <div className='hidden lg:block text-center'>
                 {candidate.ratings ? <Ratings rating={candidate.ratings} /> : 'N/A'}
               </div>
@@ -253,7 +336,7 @@ const AllCandidates: FC = () => {
                     ? `${candidate.percentage}% ${candidate.percentage > 50 ? '(Passed)' : '(Failed)'}`
                     : 'N/A'}
                 </div>
-                {userDetails.userType == 'admin' && <div><strong>Invited By:</strong> {candidate.invitedBy}</div>}
+                {userDetails.userType == 'admin' && !searchParams.get('bda') && <div><strong>Invited By:</strong> {candidate.invitedBy}</div>}
                 <div><strong>Ratings:</strong> {candidate.ratings ? <Ratings rating={candidate.ratings} /> : 'N/A'}</div>
               </div>
             </div>

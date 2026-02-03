@@ -14,6 +14,21 @@ class TestScheduleRepository {
         this.authModel = Auth;
     }
 
+    async getTaskCount(invitedBy: string){
+        const records = await this.scheduleModel.aggregate([
+        {
+            $match: { invitedBy: invitedBy }
+        },
+        {
+            $group: {
+            _id: '$testStatus',
+            count: { $sum: 1 }
+            }
+        }
+        ]);
+        return records;
+    }
+
     async createTest(data: TestRequest, mailId: string): Promise<ISchedule> {
         const test = await this.scheduleModel.create({
             candidateName: data.candidateName,
