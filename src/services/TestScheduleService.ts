@@ -22,7 +22,7 @@ class TestScheduleService {
             const taskCounts = records.reduce((acc, record) => {
                 acc[record._id] = {
                     count: record.count,
-                    percentage: Number(((record.count / totalTasks) * 100).toFixed(2)),
+                    percentage: Number(Math.ceil((record.count / totalTasks) * 100)),
                 };
                 return acc;
                 }, {} as Record<string, { count: number; percentage: number }>);
