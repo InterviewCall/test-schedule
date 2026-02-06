@@ -30,6 +30,7 @@ export interface TestRequest {
     startTime: Date
     endTime: Date
     invitedBy: string
+    problemLevel: string
 }
 
 export interface Test {

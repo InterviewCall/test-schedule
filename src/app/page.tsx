@@ -19,7 +19,7 @@ import DatePicker from 'react-datepicker';
 import toast from 'react-hot-toast';
 
 import Loader from '@/components/Loader';
-import { advisorOptions } from '@/constants';
+import { advisorOptions, problemLevelOptions } from '@/constants';
 import { UserContext } from '@/contexts/UserContext';
 import { Details, OptionType } from '@/types';
 import { isValidEmail } from '@/utils';
@@ -173,6 +173,7 @@ export default function Home() {
   const [updateEmail, setUpdateEmail] = useState('');
   // const [showeEmail, setShowEmail] = useState('');
   const [selectAdvisor, setSelecteAdvisor] = useState<OptionType | null>(null);
+  const [problemLevel, setproblemLevel] = useState<OptionType | null>(null);
   const [updateAdvisor, setUpdateAdvisor] = useState<OptionType | undefined>(undefined);
   const [formData, setFormData] = useState<Details>({
     candidateName: '',
@@ -212,6 +213,7 @@ export default function Home() {
         startTime,
         endTime,
         invitedBy: selectAdvisor?.value,
+        problemLevel: problemLevel?.value,
       });
 
       setLoading(false);
@@ -225,6 +227,7 @@ export default function Home() {
         setStartTime(null);
         setEndTime(null);
         setSelecteAdvisor(null);
+        setproblemLevel(null);
         // fetchTests();
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -237,6 +240,7 @@ export default function Home() {
       setStartTime(null);
       setEndTime(null);
       setSelecteAdvisor(null);
+      setproblemLevel(null);
       const message = error.response.data.message;
       toast.error(message);
     }
@@ -508,7 +512,7 @@ export default function Home() {
                   className='w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700'
                 />
               </div>
-              <div className='space-y-2 md:col-span-2'>
+              <div className='space-y-2'>
                 <label
                   htmlFor='occupation'
                   className='block text-sm font-medium text-gray-700'
@@ -522,6 +526,33 @@ export default function Home() {
                   placeholder='Select Advisor Name'
                   onChange={(newValue) =>
                     setSelecteAdvisor(newValue as OptionType)
+                  }
+                  className='text-black'
+                  isSearchable
+                  styles={{
+                    control: (provided) => ({
+                      ...provided,
+                      padding: '0.15rem',
+                      borderRadius: '0.375rem',
+                      cursor: 'pointer',
+                    }),
+                  }}
+                />
+              </div>
+              <div className='space-y-2 '>
+                <label
+                  htmlFor='occupation'
+                  className='block text-sm font-medium text-gray-700'
+                >
+                  Question Level
+                </label>
+
+                <Select
+                  options={problemLevelOptions}
+                  value={problemLevel}
+                  placeholder='Select Question Level'
+                  onChange={(newValue) =>
+                    setproblemLevel(newValue as OptionType)
                   }
                   className='text-black'
                   isSearchable

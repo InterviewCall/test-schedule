@@ -36,6 +36,7 @@ class TestScheduleRepository {
             startTime: data.startTime,
             endTime: data.endTime,
             invitedBy: data.invitedBy,
+            problemLevel: data.problemLevel,
             mailId: mailId
         });
         return test;
@@ -119,6 +120,7 @@ class TestScheduleRepository {
             startTime: 1,
             endTime: 1,
             testStatus: 1,
+            problemLevel: 1,
             ratings: 1
         }).lean();
         if(!test) {

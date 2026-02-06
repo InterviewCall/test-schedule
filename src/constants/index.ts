@@ -11,3 +11,8 @@ export const advisorOptions: OptionType[] = [
     { value: 'Mahima', label: 'Mahima' },
     { value: 'Ashish Chauhan', label: 'Ashish Chauhan' },
 ];
+
+export const problemLevelOptions: OptionType[] = [
+    { value: 'Intermediate', label: 'Intermediate' },
+    { value: 'Advanced', label: 'Advanced' },
+];
