@@ -54,7 +54,7 @@ export default function TestEmail({
           <br />
           <a href='${testLink}' class='button'>Start Test</a>
           <p>If you have any questions, feel free to reach out to us.</p>
-          <p>Best regards,<br>Prithviraj Paul<br>9831649077</p>
+          <p>Best regards,<br>Setu Rejeev Jain<br>7303013706</p>
         </div>
       </body>
       </html>
