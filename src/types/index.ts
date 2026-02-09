@@ -43,6 +43,7 @@ export interface Test {
     testStatus: TEST_STATUS
     reportCard: string | null
     percentage: number | null
+    problemLevel: string
     ratings: number | null
 }
 

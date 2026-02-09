@@ -21,6 +21,7 @@ const AllCandidates: FC = () => {
   const [tests, setTests] = useState<Test[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showEmail, setShowEmail] = useState('');
+  const [showCandidateProblemLevel, setShowCandidateProblemLevel] = useState<string>('');
   const [status, setStatus] = useState('');
   const [emails, setEmails] = useState<string[]>([]);
   const [header, setHeader] = useState<string[]>([]);
@@ -148,7 +149,7 @@ const AllCandidates: FC = () => {
       <dialog ref={emailRef} className='modal'>
         <div className='modal-box rounded-xl shadow-lg bg-white'>
           <h3 className='font-bold text-lg'>Email Address</h3>
-          <p className='py-4 text-gray-700'>{showEmail}</p>
+          <p className='py-4 text-gray-700'>{showEmail + '(' + showCandidateProblemLevel + ')'}</p>
           {status && <p>Status: <span className={clsx(status == 'delivered' ? 'text-green-500' : status == 'bounced' ? 'text-red-500' : 'text-primary')}>{status}</span></p>}
           <div className='modal-action'>
             <button
@@ -269,6 +270,7 @@ const AllCandidates: FC = () => {
               <div
                 className='hidden lg:block text-blue-600 hover:underline text-center cursor-pointer'
                 onClick={() => {
+                  setShowCandidateProblemLevel(candidate.problemLevel ?? 'NA');
                   setShowEmail(candidate.candidateEmail);
                   emailRef.current.showModal();
                 }}
@@ -309,6 +311,7 @@ const AllCandidates: FC = () => {
                   <span
                     className='text-blue-600 underline cursor-pointer'
                     onClick={() => {
+                      setShowCandidateProblemLevel(candidate.problemLevel ?? 'NA');
                       setShowEmail(candidate.candidateEmail);
                       emailRef.current.showModal();
                     }}

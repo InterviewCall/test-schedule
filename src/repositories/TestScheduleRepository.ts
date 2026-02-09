@@ -75,6 +75,7 @@ class TestScheduleRepository {
             ratings: 1,
             percentage: 1,
             reportCard: 1,
+            problemLevel: 1,
             _id: 0
         }).sort({ startTime: -1 }).lean();
 
@@ -96,6 +97,7 @@ class TestScheduleRepository {
             ratings: 1,
             percentage: 1,
             reportCard: 1,
+            problemLevel: 1,
             _id: 0
         }).sort({ startTime: -1 }).lean();
 
