@@ -30,6 +30,7 @@ export interface TestRequest {
     startTime: Date
     endTime: Date
     invitedBy: string
+    problemLevel: string
 }
 
 export interface Test {
@@ -42,6 +43,7 @@ export interface Test {
     testStatus: TEST_STATUS
     reportCard: string | null
     percentage: number | null
+    problemLevel: string
     ratings: number | null
 }
 

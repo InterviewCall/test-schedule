@@ -4,13 +4,14 @@ import { testScheduleService } from '@/lib/testScheduleServiceIntance';
 
 export async function POST(req: NextRequest) {
     try {
-        const { candidateName, candidateEmail, startTime, endTime, invitedBy } = await req.json();
+        const { candidateName, candidateEmail, startTime, endTime, invitedBy, problemLevel} = await req.json();
         const response = await testScheduleService.createTest({
             candidateName,
             candidateEmail,
             startTime,
             endTime,
-            invitedBy
+            invitedBy,
+            problemLevel
         }); 
 
         return NextResponse.json({
