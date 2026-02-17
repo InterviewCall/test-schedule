@@ -295,7 +295,7 @@ const AllCandidates: FC = () => {
               </div>
               <div className='hidden lg:block text-center'>
                 {candidate?.percentage != null
-                  ? `${candidate.percentage}% ${candidate.percentage > 50 ? '(Passed)' : '(Failed)'}`
+                  ? `${candidate.percentage}% ${candidate.percentage >= 50 ? '(Passed)' : '(Failed)'}`
                   : 'N/A'}
               </div>
               {userDetails.userType == 'admin' && !searchParams.get('bda') && <div className='hidden lg:block text-center'>{candidate.invitedBy}</div>}
