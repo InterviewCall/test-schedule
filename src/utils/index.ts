@@ -1,6 +1,9 @@
 import { subMinutes } from 'date-fns';
 import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 
+export const MAX_DURATION_INTERMEDIATE = 22;
+export const MAX_DURATION_ADVANCED = 12;
+
 export const formatDate = (date: Date) => {
   if (!date) return ''; // Skip if date is null/undefined
 
@@ -26,9 +29,11 @@ export const formatTime = (time: Date) => {
   }).format(new Date(time));
 };
 
-export const getMaxStartTime = (time: Date) => {
+export const getMaxStartTime = (time: Date, level: string) => {
   const zonedTime = toZonedTime(new Date(time), 'Asia/Kolkata');
-  const adjustedTime = subMinutes(zonedTime, 22);
+  const duration = level == 'Advanced' ? MAX_DURATION_ADVANCED : MAX_DURATION_INTERMEDIATE;
+  console.log('duration: ', duration);
+  const adjustedTime = subMinutes(zonedTime, duration);
   
   return fromZonedTime(adjustedTime, 'Asia/Kolkata');
 };

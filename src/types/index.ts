@@ -22,6 +22,7 @@ export interface TestProps {
     timeSlot: string
     testLink: string
     maxStartTime: string
+    duration: number
 }
 
 export interface TestRequest {

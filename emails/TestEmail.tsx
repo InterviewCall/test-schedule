@@ -5,6 +5,7 @@ export default function TestEmail({
   timeSlot,
   maxStartTime,
   testLink,
+  duration
 }: TestProps) {
   return `
       <!DOCTYPE html>
@@ -48,7 +49,7 @@ export default function TestEmail({
           <br />
           <p><strong>Date: ${date}</strong></p>
           <p><strong>Time: ${timeSlot}</strong></p>
-          <p>Test Duration: 22 minutes <strong>(Make sure to start before ${maxStartTime} to get full time!)</strong></p>
+          <p>Test Duration: ${duration} minutes <strong>(Make sure to start before ${maxStartTime} to get full time!)</strong></p>
           <br />
           <p>We look forward to seeing you take the test and wish you the best of luck.</p>
           <br />

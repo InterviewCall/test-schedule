@@ -5,6 +5,7 @@ export function TestEmailPlainText({
     timeSlot,
     maxStartTime,
     testLink,
+    duration
   }: TestProps) {
     return `
   Hey there,
@@ -13,7 +14,7 @@ export function TestEmailPlainText({
   
   Date: ${date}
   Time: ${timeSlot}
-  Test Duration: 22 minutes (Make sure to start before ${maxStartTime} to get full time!)
+  Test Duration: ${duration} minutes (Make sure to start before ${maxStartTime} to get full time!)
   
   We look forward to seeing you take the test and wish you the best of luck.
   

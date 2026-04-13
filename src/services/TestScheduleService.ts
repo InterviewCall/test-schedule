@@ -2,7 +2,7 @@ import { TEST_STATUS } from '@/enums/TestStatus';
 import TestScheduleRepository from '@/repositories/TestScheduleRepository';
 import candidateQueryFactoryStrategy from '@/strategies/candidateQueryStrategyFactory';
 import { TestRequest } from '@/types';
-import { formatDate, formatTime, getMaxStartTime } from '@/utils';
+import { formatDate, formatTime, getMaxStartTime, MAX_DURATION_ADVANCED, MAX_DURATION_INTERMEDIATE } from '@/utils';
 
 import { retrieveEmail, sendEmail } from './emailService';
 
@@ -37,9 +37,10 @@ class TestScheduleService {
         try {
             const date = formatDate(data.startTime);
             const timeSlot = `${formatTime(data.startTime)} - ${formatTime(data.endTime)}`;
-            const maxStartTime = getMaxStartTime(data.endTime);
+            const maxStartTime = getMaxStartTime(data.endTime, data.problemLevel);
+            const duration = data.problemLevel == 'Advanced' ? MAX_DURATION_ADVANCED : MAX_DURATION_INTERMEDIATE;
             
-            const response = await sendEmail(date, timeSlot, formatTime(maxStartTime), data.candidateEmail);
+            const response = await sendEmail(date, timeSlot, formatTime(maxStartTime), data.candidateEmail, duration);
 
             const test = await this.testScheduleRepository.createTest(data, response.data!);
             return test;
@@ -133,11 +134,19 @@ class TestScheduleService {
 
     async updateDateTimeSlot(email: string, startTime: Date, endTime: Date, updateAdvisor?: string) {
         try {
+            const test = await this.getTest(email);
+
+            if(!test) {
+                throw 'Candidate is not present';
+            }
+
             const testDate = formatDate(startTime);
             const timeSlot = `${formatTime(startTime)} - ${formatTime(endTime)}`;
-            const maxStartTime = getMaxStartTime(endTime);
+            const maxStartTime = getMaxStartTime(endTime, test.problemLevel);
+
+            const duration = test.problemLevel == 'Advanced' ? MAX_DURATION_ADVANCED : MAX_DURATION_INTERMEDIATE;
             
-            const emailResponse = await sendEmail(testDate, timeSlot, formatTime(maxStartTime), email);
+            const emailResponse = await sendEmail(testDate, timeSlot, formatTime(maxStartTime), email, duration);
             
             await this.testScheduleRepository.updateDateTimeSlot(email, startTime, endTime, emailResponse.data!, updateAdvisor);
         } catch (error) {
