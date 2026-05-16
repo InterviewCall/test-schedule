@@ -9,6 +9,7 @@ export const advisorOptions: OptionType[] = [
     // { value: 'Piyal', label: 'Piyal' },
     // { value: 'Dutta', label: 'Dutta' },
     { value: 'Devtanaya', label: 'Devtanaya' },
+    { value: 'Shaikh', label: 'Shaikh' },
     { value: 'Ashish Chauhan', label: 'Ashish Chauhan' },
 ];
 
