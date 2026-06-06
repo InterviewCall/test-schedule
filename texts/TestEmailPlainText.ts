@@ -23,8 +23,8 @@ export function TestEmailPlainText({
   If you have any questions, feel free to reach out to us.
   
   Best regards,  
-  Setu Rajeev Jain  
-  7303013706
+  Team InterviewCall  
+  +91 8100236344
     `;
   }
   
