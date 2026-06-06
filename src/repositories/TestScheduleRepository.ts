@@ -133,7 +133,7 @@ class TestScheduleRepository {
     }
 
     async getTestsByTestStatus(testStatus: TEST_STATUS) {
-        const tests = await this.scheduleModel.find({ testStatus }).sort({ startTime: -1 }).lean();
+        const tests = await this.scheduleModel.find({ testStatus }).sort({ startTime: -1 }).lean<ISchedule[]>();
         return tests;
     }
 
