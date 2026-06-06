@@ -43,7 +43,7 @@ class TestScheduleRepository {
     }
 
     async getAllTest(): Promise<ISchedule[]> {
-        const test = await this.scheduleModel.find().sort({ startTime: -1 }).lean();
+        const test = await this.scheduleModel.find().sort({ startTime: -1 }).lean<ISchedule[]>();
         return test;
     }
 
@@ -56,7 +56,7 @@ class TestScheduleRepository {
             endTime: 1,
             testStatus: 1,
             ratings: 1,
-        }).lean();
+        }).lean<ISchedule[]>();
         return test;
     }
 
@@ -77,7 +77,7 @@ class TestScheduleRepository {
             reportCard: 1,
             problemLevel: 1,
             _id: 0
-        }).sort({ startTime: -1 }).lean();
+        }).sort({ startTime: -1 }).lean<ISchedule[]>();
 
         return candidates;
     }
@@ -99,7 +99,7 @@ class TestScheduleRepository {
             reportCard: 1,
             problemLevel: 1,
             _id: 0
-        }).sort({ startTime: -1 }).lean();
+        }).sort({ startTime: -1 }).lean<ISchedule[]>();
 
         return candidates;
     }
