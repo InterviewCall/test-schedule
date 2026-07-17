@@ -1,15 +1,12 @@
 import { OptionType } from '@/types';
 
 export const advisorOptions: OptionType[] = [
-    // { value: 'M Mandal', label: 'M Mandal' },
-    // { value: 'Anjali', label: 'Anjali' },
-    { value: 'Setu', label: 'Setu' },
-    // { value: 'Sayan', label: 'Sayan' },
+    { value: 'Durgesh', label: 'Durgesh' },
     { value: 'Subhajit', label: 'Subhajit' },
-    // { value: 'Piyal', label: 'Piyal' },
-    // { value: 'Dutta', label: 'Dutta' },
-    { value: 'Devtanaya', label: 'Devtanaya' },
-    { value: 'Ojus', label: 'Ojus' },
+    { value: 'Ishika', label: 'Ishika' },
+    { value: 'Rishab', label: 'Rishab' },
+    { value: 'Supriya', label: 'Supriya' },
+    { value: 'Debopriya', label: 'Debopriya' },
     { value: 'Shaik', label: 'Shaik' },
     { value: 'Ashish Chauhan', label: 'Ashish Chauhan' },
 ];
